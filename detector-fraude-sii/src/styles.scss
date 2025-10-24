@@ -1,15 +1,43 @@
 :root {
-  --color-primary: #0b3a78; /* azul institucional aprox */
+  --color-primary: #0b3a78;
   --color-bg: #f6f8fc;
   --text: #182230;
+  --muted: #e6ecf5;
+  --ring: #d9e2ef;
 }
 
-html, body { height: 100%; }
+html,
+body {
+  height: 100%;
+}
 body {
   margin: 0;
-  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Inter, "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Inter,
+    "Helvetica Neue", Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji";
   color: var(--text);
   background: var(--color-bg);
 }
 
-h1, h2, h3 { margin: 0; }
+h1,
+h2,
+h3 {
+  margin: 0;
+}
+
+/* el root es el contenedor flex de toda la app */
+app-root {
+  min-height: 100svh; /* usa dvh/svh si quieres, este anda bien */
+  display: flex;
+  flex-direction: column;
+}
+
+/* el contenido crece, empujando el footer al final */
+.page {
+  flex: 1 0 auto;
+  display: block;
+}
+
+/* por si alguien mueve el footer, esto lo empuja al fondo igual */
+app-footer {
+  margin-top: auto;
+}
