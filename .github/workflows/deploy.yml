@@ -1,4 +1,4 @@
-name: Deploy Angular to GitHub Pages
+name: Deploy Angular to GitHub Pages (subdir)
 
 on:
   push:
@@ -14,6 +14,9 @@ concurrency:
   group: "pages"
   cancel-in-progress: true
 
+env:
+  PROJECT_DIR: detector-fraude-sii   # <--- carpeta donde vive tu Angular (la de adentro)
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -21,23 +24,28 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Usa cache de npm apuntando al lockfile dentro de la SUBCARPETA
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: 'npm'
+          cache: npm
+          cache-dependency-path: ${{ env.PROJECT_DIR }}/package-lock.json
 
       - name: Install deps
+        working-directory: ${{ env.PROJECT_DIR }}
         run: npm ci
 
       - name: Compute repo name
         run: echo "REPO_NAME=${GITHUB_REPOSITORY#*/}" >> $GITHUB_ENV
 
       - name: Build Angular
+        working-directory: ${{ env.PROJECT_DIR }}
         run: npx @angular/cli@16 build --configuration production --base-href="/${REPO_NAME}/"
 
       - name: Locate dist folder
         id: dist
+        working-directory: ${{ env.PROJECT_DIR }}
         run: |
           DIST_DIR=$(ls -d dist/* | head -n 1)
           echo "dir=$DIST_DIR" >> $GITHUB_OUTPUT
@@ -45,7 +53,8 @@ jobs:
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: ${{ steps.dist.outputs.dir }}
+          # ¡Ojo! ruta relativa a la RAÍZ del repo
+          path: ${{ env.PROJECT_DIR }}/${{ steps.dist.outputs.dir }}
 
   deploy:
     needs: build
