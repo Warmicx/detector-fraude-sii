@@ -1,1 +1,36 @@
-<p>alertas works!</p>
+<section class="container alertas">
+  <header class="section-header">
+    <h1>Alertas de riesgo</h1>
+    <p>Explora las alertas generadas automáticamente y prioriza su revisión.</p>
+  </header>
+
+  <div class="filters">
+    <div class="chip-group" aria-label="Estados">
+      <span class="chip chip--active" *ngFor="let estado of estados">{{ estado }}</span>
+    </div>
+    <div class="chip-group" aria-label="Severidad">
+      <span class="chip" *ngFor="let severidad of severidades" [class.chip--alta]="severidad === 'ALTA'" [class.chip--media]="severidad === 'MEDIA'" [class.chip--baja]="severidad === 'BAJA'">
+        {{ severidad }}
+      </span>
+    </div>
+  </div>
+
+  <section class="panel" aria-label="Listado de alertas">
+    <article class="alert" *ngFor="let alerta of alertas" [class.alert--alta]="alerta.severidad === 'ALTA'" [class.alert--media]="alerta.severidad === 'MEDIA'" [class.alert--baja]="alerta.severidad === 'BAJA'">
+      <header>
+        <h2>{{ alerta.id }}</h2>
+        <span class="badge">{{ alerta.severidad }}</span>
+      </header>
+      <p class="alert__meta">{{ alerta.rut }} · {{ alerta.razonSocial }}</p>
+      <p class="alert__rule">Regla: {{ alerta.regla }}</p>
+      <p class="alert__date">{{ alerta.fecha }}</p>
+    </article>
+  </section>
+
+  <nav class="pagination" aria-label="Paginación">
+    <button type="button" class="page-btn" disabled aria-label="Anterior">‹</button>
+    <button type="button" class="page-btn active" disabled>1</button>
+    <button type="button" class="page-btn" disabled>2</button>
+    <button type="button" class="page-btn" disabled aria-label="Siguiente">›</button>
+  </nav>
+</section>

@@ -1,1 +1,81 @@
-<p>reportes works!</p>
+<section class="container reportes">
+  <header class="section-header">
+    <h1>Reportes y visualizaciones</h1>
+    <p>Analiza el comportamiento agregado del score de riesgo y sus tendencias.</p>
+  </header>
+
+  <div class="cards">
+    <article class="card" *ngFor="let tarjeta of tarjetas">
+      <h2>{{ tarjeta.titulo }}</h2>
+      <p class="card__value">{{ tarjeta.valor }}</p>
+      <p class="card__detail">{{ tarjeta.detalle }}</p>
+    </article>
+  </div>
+
+  <div class="charts">
+    <section class="chart-card" aria-label="Distribución por nivel de riesgo">
+      <h2>Distribución por nivel</h2>
+      <div class="bar-chart">
+        <div class="bar" *ngFor="let item of distribucion" [style.--value]="item.value">
+          <div class="bar__fill"></div>
+          <span class="bar__label">{{ item.label }}</span>
+          <span class="bar__value">{{ item.value }}</span>
+        </div>
+      </div>
+    </section>
+    <section class="chart-card" aria-label="Evolución semanal de casos altos">
+      <h2>Evolución semanal</h2>
+      <div class="line-chart">
+        <svg viewBox="0 0 240 120" role="img" aria-hidden="true">
+          <polyline
+            fill="none"
+            stroke="var(--color-secondary)"
+            stroke-width="4"
+            points="0,90 60,80 120,60 180,40 240,30"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+          ></polyline>
+        </svg>
+        <ul>
+          <li *ngFor="let item of evolucion">
+            <span class="dot"></span>
+            <span>{{ item.label }}</span>
+            <span class="value">{{ item.value }}</span>
+          </li>
+        </ul>
+      </div>
+    </section>
+  </div>
+
+  <section class="table-card" aria-label="Resumen mensual">
+    <header>
+      <div>
+        <h2>Resumen por período</h2>
+        <p>Totales agrupados por mes de referencia.</p>
+      </div>
+      <button type="button" class="btn" disabled>Exportar CSV</button>
+    </header>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th scope="col">Período</th>
+            <th scope="col">Total</th>
+            <th scope="col">Alto</th>
+            <th scope="col">Medio</th>
+            <th scope="col">Bajo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let fila of resumen">
+            <td data-title="Período">{{ fila.periodo }}</td>
+            <td data-title="Total">{{ fila.total }}</td>
+            <td data-title="Alto">{{ fila.alto }}</td>
+            <td data-title="Medio">{{ fila.medio }}</td>
+            <td data-title="Bajo">{{ fila.bajo }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</section>

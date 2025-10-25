@@ -1,0 +1,69 @@
+<section class="hero">
+  <div class="container hero__grid">
+    <div class="hero__content">
+      <p class="eyebrow">Detector de fraude SII</p>
+      <h1>Gestiona la vigilancia de riesgo con información oportuna</h1>
+      <p class="lead">
+        Visualiza el score de contribuyentes, revisa reglas activadas y prioriza acciones correctivas en toda la organización.
+      </p>
+      <div class="hero__actions">
+        <a class="btn" routerLink="/busqueda">Iniciar búsqueda</a>
+        <a class="btn btn--ghost" routerLink="/reportes">Ver reportes</a>
+      </div>
+      <div class="hero__notices" aria-label="Avisos relevantes">
+        <article class="notice" *ngFor="let notice of notices">
+          <h3>{{ notice.title }}</h3>
+          <p>{{ notice.description }}</p>
+        </article>
+      </div>
+    </div>
+    <div class="hero__metrics" aria-label="Indicadores principales">
+      <div class="metric" *ngFor="let kpi of kpis">
+        <span class="metric__value">{{ kpi.value }}</span>
+        <span class="metric__label">{{ kpi.label }}</span>
+        <span class="metric__trend">{{ kpi.trend }}</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="container quick-links" aria-label="Accesos rápidos">
+  <header class="section-header">
+    <h2>Accesos rápidos</h2>
+    <p>Accede a las áreas clave del monitoreo de riesgo institucional.</p>
+  </header>
+  <div class="tile-grid">
+    <a class="tile" *ngFor="let link of quickLinks" [routerLink]="link.path">
+      <div>
+        <h3>{{ link.label }}</h3>
+        <p>{{ link.description }}</p>
+      </div>
+      <span class="tile__icon" aria-hidden="true">➜</span>
+    </a>
+  </div>
+</section>
+
+<section class="container columns">
+  <div class="column">
+    <header class="section-header">
+      <h2>Destacados</h2>
+    </header>
+    <ul class="list">
+      <li *ngFor="let item of highlights">
+        <span class="list__title">{{ item.title }}</span>
+        <span class="list__meta">{{ item.date }}</span>
+      </li>
+    </ul>
+  </div>
+  <div class="column">
+    <header class="section-header">
+      <h2>Noticias</h2>
+    </header>
+    <ul class="list">
+      <li *ngFor="let item of news">
+        <span class="list__title">{{ item.title }}</span>
+        <span class="list__meta">{{ item.source }}</span>
+      </li>
+    </ul>
+  </div>
+</section>
