@@ -20,10 +20,10 @@ type Contribuyente = {
 })
 export class BusquedaComponent {
   contribuyentes: Contribuyente[] = [
-    { rut: '11.111.111-1', razonSocial: 'Inversiones Andes SpA', giro: 'Servicios financieros', score: 812, nivel: 'ALTO', comuna: 'Santiago' },
-    { rut: '12.345.678-9', razonSocial: 'Logística Austral Ltda.', giro: 'Transporte de carga', score: 645, nivel: 'MEDIO', comuna: 'Puerto Montt' },
-    { rut: '76.543.210-4', razonSocial: 'Retail Pacífico S.A.', giro: 'Comercio al por menor', score: 588, nivel: 'MEDIO', comuna: 'Viña del Mar' },
-    { rut: '95.321.456-7', razonSocial: 'Consultores Tributarios Limitada', giro: 'Servicios profesionales', score: 432, nivel: 'BAJO', comuna: 'Concepción' },
+    { rut: '11.111.111-1', razonSocial: 'Cabañas EcoLazos SpA', giro: 'Cabañas', score: 812, nivel: 'ALTO', comuna: 'Santiago' },
+    { rut: '12.345.678-9', razonSocial: 'Momentos Que Importan Ltda.', giro: 'Servicios sociales', score: 645, nivel: 'MEDIO', comuna: 'Puerto Montt' },
+    { rut: '76.543.210-4', razonSocial: 'Eco Market S.A.', giro: 'Comercio al por menor', score: 588, nivel: 'MEDIO', comuna: 'Viña del Mar' },
+    { rut: '95.321.456-7', razonSocial: 'Descubre QR Chile Limitada', giro: 'Servicios profesionales', score: 432, nivel: 'BAJO', comuna: 'Concepción' },
     { rut: '81.203.405-2', razonSocial: 'Constructora Horizonte', giro: 'Construcción', score: 701, nivel: 'ALTO', comuna: 'Antofagasta' },
     { rut: '79.456.123-5', razonSocial: 'AgroSur Exportaciones', giro: 'Agroindustria', score: 569, nivel: 'MEDIO', comuna: 'Talca' },
     { rut: '88.765.432-1', razonSocial: 'Hotelera Patagonia', giro: 'Hotelería', score: 483, nivel: 'BAJO', comuna: 'Coyhaique' },
