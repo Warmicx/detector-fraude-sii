@@ -1,1 +1,53 @@
-<p>contribuyente works!</p>
+<section class="container contribuyente">
+  <header class="summary">
+    <div>
+      <p class="summary__label">RUT</p>
+      <h1>{{ contribuyente.rut }}</h1>
+      <p class="summary__subtitle">{{ contribuyente.razonSocial }}</p>
+      <p class="summary__meta">{{ contribuyente.giro }} · {{ contribuyente.comuna }}</p>
+    </div>
+    <div class="summary__score">
+      <span class="summary__score-value">{{ contribuyente.score }}</span>
+      <span class="summary__badge" [class.summary__badge--alto]="contribuyente.nivel === 'ALTO'">
+        {{ contribuyente.nivel }}
+      </span>
+      <span class="summary__score-label">Score de riesgo</span>
+    </div>
+  </header>
+
+  <div class="grid">
+    <section class="card" aria-labelledby="reglas-title">
+      <h2 id="reglas-title">Reglas activadas</h2>
+      <div class="chips">
+        <span class="chip" *ngFor="let regla of reglas">{{ regla.nombre }}</span>
+      </div>
+      <ul class="reglas">
+        <li *ngFor="let regla of reglas">
+          <h3>{{ regla.nombre }}</h3>
+          <p>{{ regla.descripcion }}</p>
+        </li>
+      </ul>
+    </section>
+
+    <section class="card" aria-labelledby="actividad-title">
+      <h2 id="actividad-title">Actividad reciente</h2>
+      <ol class="timeline">
+        <li *ngFor="let actividad of actividades">
+          <span class="timeline__date">{{ actividad.fecha }}</span>
+          <p>{{ actividad.descripcion }}</p>
+        </li>
+      </ol>
+    </section>
+
+    <section class="card card--wide" aria-labelledby="historico-title">
+      <h2 id="historico-title">Histórico de score</h2>
+      <div class="chart" role="img" aria-label="Histórico de score en los últimos meses">
+        <div class="chart__bar" *ngFor="let item of historico" [style.--value]="item.valor">
+          <div class="chart__bar-fill"></div>
+          <span class="chart__label">{{ item.periodo }}</span>
+          <span class="chart__value">{{ item.valor }}</span>
+        </div>
+      </div>
+    </section>
+  </div>
+</section>

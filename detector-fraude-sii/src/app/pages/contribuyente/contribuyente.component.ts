@@ -1,13 +1,54 @@
 import { Component } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { NgFor } from '@angular/common';
+
+interface Regla {
+  nombre: string;
+  descripcion: string;
+}
+
+interface Actividad {
+  fecha: string;
+  descripcion: string;
+}
+
+interface Historico {
+  periodo: string;
+  valor: number;
+}
 
 @Component({
   selector: 'app-contribuyente',
   standalone: true,
-  imports: [CommonModule],
+  imports: [NgFor],
   templateUrl: './contribuyente.component.html',
-  styleUrls: ['./contribuyente.component.scss']
+  styleUrls: ['./contribuyente.component.scss'],
 })
 export class ContribuyenteComponent {
+  contribuyente = {
+    rut: '11.111.111-1',
+    razonSocial: 'Cabañas EcoLazos SpA',
+    giro: 'Cabañas',
+    comuna: 'Santiago',
+    score: 812,
+    nivel: 'ALTO' as const,
+  };
 
+  reglas: Regla[] = [
+    { nombre: 'Volumen inusual de facturación', descripcion: 'Variación superior al 54% respecto del promedio trimestral.' },
+    { nombre: 'Giro Incongruente', descripcion: 'Declaraciones de compras sin correlación con giro.' },
+  ];
+
+  actividades: Actividad[] = [
+    { fecha: '06 JUL 2025', descripcion: 'Analista regional registró revisión manual de documentos respaldatorios.' },
+    { fecha: '03 SEP 2025', descripcion: 'Se generó alerta de severidad alta por patrón de gastos atípicos.' },
+    { fecha: '25 OCT 2025', descripcion: 'Score recalculado con actualización de variables de comportamiento mensual.' },
+  ];
+
+  historico: Historico[] = [
+    { periodo: 'ENE', valor: 520 },
+    { periodo: 'FEB', valor: 560 },
+    { periodo: 'MAR', valor: 640 },
+    { periodo: 'ABR', valor: 780 },
+    { periodo: 'MAY', valor: 812 },
+  ];
 }

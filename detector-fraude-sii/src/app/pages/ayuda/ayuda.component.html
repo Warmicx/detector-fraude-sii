@@ -1,1 +1,28 @@
-<p>ayuda works!</p>
+<section class="container ayuda">
+  <header class="section-header">
+    <h1>Centro de ayuda</h1>
+    <p>Encuentra orientaciones para interpretar el score y resolver dudas frecuentes.</p>
+  </header>
+
+  <div class="grid">
+    <section class="card" *ngFor="let seccion of secciones">
+      <h2>{{ seccion.titulo }}</h2>
+      <p>{{ seccion.descripcion }}</p>
+      <ul>
+        <li *ngFor="let punto of seccion.puntos">{{ punto }}</li>
+      </ul>
+    </section>
+  </div>
+
+  <section class="faq">
+    <h2>Preguntas frecuentes</h2>
+    <ul>
+      <li *ngFor="let pregunta of preguntasFrecuentes">
+        <button type="button" class="faq__question" aria-expanded="false">
+          {{ pregunta.pregunta }}
+        </button>
+        <div class="faq__answer">{{ pregunta.respuesta }}</div>
+      </li>
+    </ul>
+  </section>
+</section>

@@ -1,1 +1,76 @@
-<p>busqueda works!</p>
+<section class="container search">
+  <header class="section-header">
+    <h1>Búsqueda de contribuyentes</h1>
+    <p>Ingresa un RUT y aplica filtros visuales para priorizar la revisión.</p>
+  </header>
+
+  <div class="card filters">
+    <div class="filters__row">
+      <label>
+        <span>RUT</span>
+        <input type="text" placeholder="12.345.678-9" />
+      </label>
+      <label>
+        <span>Período</span>
+        <select>
+          <option *ngFor="let periodo of periodos">{{ periodo }}</option>
+        </select>
+      </label>
+      <label>
+        <span>Giro</span>
+        <select>
+          <option *ngFor="let giro of giros">{{ giro }}</option>
+        </select>
+      </label>
+      <label>
+        <span>Rango de score</span>
+        <select>
+          <option *ngFor="let rango of rangosScore">{{ rango }}</option>
+        </select>
+      </label>
+    </div>
+    <div class="filters__actions">
+      <button type="button" class="btn">Buscar</button>
+      <button type="button" class="btn btn--ghost" disabled>Limpiar</button>
+    </div>
+  </div>
+</section>
+
+<section class="container">
+  <div class="table-wrapper" role="region" aria-label="Resultados de búsqueda">
+    <table>
+      <thead>
+        <tr>
+          <th scope="col">RUT</th>
+          <th scope="col">Razón Social</th>
+          <th scope="col">Giro</th>
+          <th scope="col">Score</th>
+          <th scope="col">Nivel</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of contribuyentes">
+          <td data-title="RUT">{{ item.rut }}</td>
+          <td data-title="Razón Social">{{ item.razonSocial }}</td>
+          <td data-title="Giro">{{ item.giro }}</td>
+          <td data-title="Score">{{ item.score }}</td>
+          <td data-title="Nivel">
+            <span class="badge" [class.badge--alto]="item.nivel === 'ALTO'" [class.badge--medio]="item.nivel === 'MEDIO'" [class.badge--bajo]="item.nivel === 'BAJO'">
+              {{ item.nivel }}
+            </span>
+          </td>
+          <td data-title="Acciones">
+            <a [routerLink]="['/contribuyente', formatRut(item.rut)]">Ver detalle</a>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <nav class="pagination" aria-label="Paginación">
+    <button type="button" class="page-btn" disabled aria-label="Anterior">‹</button>
+    <button type="button" class="page-btn active" disabled>1</button>
+    <button type="button" class="page-btn" disabled>2</button>
+    <button type="button" class="page-btn" disabled aria-label="Siguiente">›</button>
+  </nav>
+</section>
