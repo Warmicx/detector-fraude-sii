@@ -1,1 +1,50 @@
-<p>ayuda works!</p>
+<section class="container ayuda">
+  <header class="section-heading">
+    <h1>Centro de ayuda</h1>
+    <p>Documentación resumida para comprender los indicadores y facilitar la toma de decisiones.</p>
+  </header>
+
+  <article class="card bloque" aria-labelledby="score-title">
+    <h2 id="score-title">Cómo interpretar el score</h2>
+    <p>
+      El score sintetiza múltiples variables tributarias y de comportamiento. Valores entre 0 y 39 indican un riesgo bajo,
+      mientras que sobre 70 corresponde a casos de atención prioritaria. Se recomienda revisar la combinación de reglas activadas,
+      los antecedentes históricos y los periodos con mayor variación para contextualizar cada resultado.
+    </p>
+    <ul>
+      <li>Verifica la tendencia del score y su estabilidad en el tiempo.</li>
+      <li>Compara con contribuyentes similares dentro del mismo giro.</li>
+      <li>Coordina revisiones con equipos regionales cuando la severidad sea alta.</li>
+    </ul>
+  </article>
+
+  <article class="card bloque" aria-labelledby="glosario-title">
+    <h2 id="glosario-title">Glosario de variables</h2>
+    <dl class="glosario">
+      <div>
+        <dt>Variación de ventas</dt>
+        <dd>Medición porcentual de las ventas mensuales comparadas con el promedio del trimestre.</dd>
+      </div>
+      <div>
+        <dt>Consistencia IVA</dt>
+        <dd>Diferencia relativa entre el IVA débito declarado y el crédito reportado por proveedores.</dd>
+      </div>
+      <div>
+        <dt>Severidad</dt>
+        <dd>Nivel de prioridad asignado a la alerta según la combinación de reglas y reincidencia.</dd>
+      </div>
+      <div>
+        <dt>Alertas activas</dt>
+        <dd>Total de reglas gatilladas pendientes de revisión dentro del período seleccionado.</dd>
+      </div>
+    </dl>
+  </article>
+
+  <article class="card bloque" aria-labelledby="faq-title">
+    <h2 id="faq-title">Preguntas frecuentes</h2>
+    <div class="faq" *ngFor="let item of faq">
+      <h3>{{ item.pregunta }}</h3>
+      <p>{{ item.respuesta }}</p>
+    </div>
+  </article>
+</section>

@@ -1,51 +1,32 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
   selector: 'app-header',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, RouterLinkActive],
   template: `
-    <header class="topbar">
-      <div class="container">
-        <div class="brand" routerLink="/">DF-SII</div>
-
-        <nav class="nav">
-          <a routerLink="/" class="link">Inicio</a>
-
-          <div class="dropdown">
-            <button class="link">Servicios</button>
-            <div class="menu">
-              <a routerLink="/busqueda">Búsqueda</a>
-              <a routerLink="/contribuyente/11111111-1">Detalle Contribuyente</a>
-              <a routerLink="/alertas">Alertas y Reglas</a>
-              <a routerLink="/reportes">Reportes</a>
+    <header class="topbar" role="banner">
+      <div class="container topbar__content">
+        <a routerLink="/" class="brand" aria-label="Ir al inicio">DF-SII</a>
+        <nav class="nav" aria-label="Navegación principal">
+          <a routerLink="/" routerLinkActive="is-active" class="nav__link">Inicio</a>
+          <div class="nav__group">
+            <button type="button" class="nav__link nav__trigger" aria-haspopup="true" aria-expanded="false">
+              Servicios
+            </button>
+            <div class="nav__menu" role="menu">
+              <a routerLink="/busqueda" class="nav__menu-link" role="menuitem">Búsqueda</a>
+              <a routerLink="/contribuyente/11111111-1" class="nav__menu-link" role="menuitem">Detalle contribuyente</a>
+              <a routerLink="/alertas" class="nav__menu-link" role="menuitem">Alertas</a>
+              <a routerLink="/reportes" class="nav__menu-link" role="menuitem">Reportes</a>
             </div>
           </div>
-
-          <a routerLink="/ayuda" class="link">Ayuda</a>
+          <a routerLink="/ayuda" routerLinkActive="is-active" class="nav__link">Ayuda</a>
         </nav>
       </div>
     </header>
   `,
-  styles: [`
-    .topbar { background: var(--color-primary); color: #fff; }
-    .container {
-      max-width: 1200px; margin: 0 auto; padding: 0 16px;
-      height: 56px; display: flex; align-items: center; justify-content: space-between;
-    }
-    .brand { font-weight: 700; letter-spacing: .5px; cursor: pointer; }
-    .nav { display: flex; align-items: center; gap: 16px; position: relative; }
-    .link { color: #fff; text-decoration: none; font-weight: 500; }
-    .dropdown { position: relative; }
-    .dropdown .menu {
-      display: none; position: absolute; top: 120%; left: 0;
-      background: #fff; color: #222; border-radius: 8px; box-shadow: 0 8px 24px rgba(0,0,0,.12);
-      min-width: 260px; padding: 8px; z-index: 10;
-    }
-    .dropdown:hover .menu { display: grid; }
-    .menu a { padding: 10px 12px; border-radius: 6px; text-decoration: none; color: #222; }
-    .menu a:hover { background: #f2f5f9; }
-  `]
+  styleUrls: ['./header.component.scss']
 })
 export class HeaderComponent {}

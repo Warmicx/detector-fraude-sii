@@ -1,1 +1,74 @@
-<p>contribuyente works!</p>
+<section class="container contribuyente">
+  <header class="card resumen">
+    <div>
+      <p class="resumen__label">Contribuyente</p>
+      <h1>{{ razonSocial }}</h1>
+      <dl class="resumen__meta">
+        <div>
+          <dt>RUT</dt>
+          <dd>{{ rut }}</dd>
+        </div>
+        <div>
+          <dt>Giro</dt>
+          <dd>{{ giro }}</dd>
+        </div>
+        <div>
+          <dt>Comuna</dt>
+          <dd>{{ comuna }}</dd>
+        </div>
+      </dl>
+    </div>
+    <div class="resumen__score">
+      <p class="resumen__score-label">Score de riesgo</p>
+      <span class="resumen__score-value">{{ score }}</span>
+      <span [class]="badgeClass()">{{ nivel }}</span>
+    </div>
+  </header>
+
+  <div class="grid">
+    <section class="card reglas" aria-labelledby="reglas-title">
+      <div class="card-header">
+        <h2 id="reglas-title" class="card-title">Reglas activadas</h2>
+        <p class="card-subtitle">Listado de señales gatilladas en el período evaluado.</p>
+      </div>
+      <div class="reglas__list">
+        <article class="regla" *ngFor="let regla of reglas">
+          <div class="chip" [ngClass]="'chip--' + (regla.category | lowercase)">{{ regla.tag }}</div>
+          <p>{{ regla.description }}</p>
+          <span class="categoria">{{ regla.category }}</span>
+        </article>
+      </div>
+    </section>
+
+    <section class="card actividad" aria-labelledby="actividad-title">
+      <div class="card-header">
+        <h2 id="actividad-title" class="card-title">Actividad reciente</h2>
+        <p class="card-subtitle">Eventos destacados en la evaluación del contribuyente.</p>
+      </div>
+      <ul class="timeline">
+        <li class="timeline-item" *ngFor="let item of actividad">
+          <span class="timeline-date">{{ item.date }}</span>
+          <p>{{ item.detail }}</p>
+          <span class="timeline-channel">{{ item.channel }}</span>
+        </li>
+      </ul>
+    </section>
+  </div>
+
+  <section class="card historico" aria-labelledby="historico-title">
+    <div class="card-header">
+      <h2 id="historico-title" class="card-title">Histórico de score</h2>
+      <p class="card-subtitle">Evolución de los últimos seis períodos mensuales.</p>
+    </div>
+    <div class="grafico" role="img" aria-label="Gráfico de barras con evolución del score">
+      <div
+        class="barra"
+        *ngFor="let punto of historico"
+        [style.--valor]="punto.value"
+      >
+        <span class="barra__valor">{{ punto.value }}</span>
+        <span class="barra__etiqueta">{{ punto.label }}</span>
+      </div>
+    </div>
+  </section>
+</section>

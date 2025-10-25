@@ -1,1 +1,68 @@
-<p>alertas works!</p>
+<section class="container alertas">
+  <header class="section-heading">
+    <h1>Alertas activas</h1>
+    <p>Supervisa las señales generadas por el motor de reglas y prioriza el seguimiento.</p>
+  </header>
+
+  <div class="card filtros">
+    <div class="card-header">
+      <div>
+        <h2 class="card-title">Filtros</h2>
+        <p class="card-subtitle">Sin lógica aplicada — selección visual.</p>
+      </div>
+    </div>
+    <div class="filtros__grupo">
+      <span class="filtros__etiqueta">Estado</span>
+      <div class="chip-group">
+        <button type="button" class="chip" *ngFor="let estado of estados; let i = index" [ngClass]="{'is-active': i === 0}">{{ estado }}</button>
+      </div>
+    </div>
+    <div class="filtros__grupo">
+      <span class="filtros__etiqueta">Severidad</span>
+      <div class="chip-group">
+        <button type="button" class="chip" *ngFor="let nivel of severidades; let i = index" [ngClass]="{'is-active': i === 0}">{{ nivel }}</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="card listado">
+    <div class="card-header">
+      <div>
+        <h2 class="card-title">Listado de alertas</h2>
+        <p class="card-subtitle">Registros de muestra para navegación y estilo.</p>
+      </div>
+      <span class="badge badge-mid">6 registros</span>
+    </div>
+
+    <div class="alertas__panel">
+      <article *ngFor="let alerta of alertas" [class]="severidadClass(alerta.severidad)">
+        <div class="alerta__header">
+          <span class="alerta__id">{{ alerta.id }}</span>
+          <span class="alerta__severidad">Severidad {{ alerta.severidad }}</span>
+        </div>
+        <h3>{{ alerta.regla }}</h3>
+        <dl class="alerta__meta">
+          <div>
+            <dt>RUT</dt>
+            <dd>{{ alerta.rut }}</dd>
+          </div>
+          <div>
+            <dt>Razón social</dt>
+            <dd>{{ alerta.razonSocial }}</dd>
+          </div>
+          <div>
+            <dt>Fecha</dt>
+            <dd>{{ alerta.fecha }}</dd>
+          </div>
+        </dl>
+        <a [routerLink]="['/contribuyente', formatRutPath(alerta.rut)]" class="btn-link">Ver detalle</a>
+      </article>
+    </div>
+
+    <nav class="pagination" aria-label="Paginación de alertas">
+      <button type="button" disabled>Anterior</button>
+      <button type="button" class="is-current" aria-current="page">1</button>
+      <button type="button" disabled>Siguiente</button>
+    </nav>
+  </div>
+</section>

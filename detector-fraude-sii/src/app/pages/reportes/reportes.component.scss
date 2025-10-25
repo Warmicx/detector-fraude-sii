@@ -1,0 +1,134 @@
+.reportes {
+  display: grid;
+  gap: 32px;
+  padding-block: 24px 72px;
+}
+
+.reportes .section-heading h1 {
+  margin: 0;
+  font-size: clamp(2rem, 2vw + 1rem, 2.6rem);
+}
+
+.reportes .section-heading p {
+  margin: 0;
+  color: #4a5a6f;
+}
+
+.resumen-grid {
+  display: grid;
+  gap: 16px;
+}
+
+@media (min-width: 768px) {
+  .resumen-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+.resumen-card {
+  display: grid;
+  gap: 8px;
+  background: linear-gradient(180deg, #ffffff, #f3f7ff);
+}
+
+.resumen-card h2 {
+  margin: 0;
+  font-size: 2rem;
+  color: var(--color-primary);
+}
+
+.resumen-card .label {
+  margin: 0;
+  font-weight: 600;
+}
+
+.resumen-card .description {
+  margin: 0;
+  color: #4a5a6f;
+}
+
+.charts {
+  display: grid;
+  gap: 24px;
+}
+
+@media (min-width: 992px) {
+  .charts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.barras {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 16px;
+  align-items: end;
+  min-height: 220px;
+}
+
+.barras .barra {
+  position: relative;
+  border-radius: var(--radius-md);
+  background: linear-gradient(180deg, rgba(12, 91, 191, 0.8), rgba(11, 58, 120, 0.95));
+  height: calc(var(--porcentaje) * 2px + 80px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 36px;
+  color: #fff;
+  box-shadow: 0 12px 24px rgba(11, 58, 120, 0.18);
+}
+
+.barras .barra__valor {
+  position: absolute;
+  top: -32px;
+  font-weight: 600;
+}
+
+.barras .barra__etiqueta {
+  position: absolute;
+  bottom: 8px;
+  font-size: 0.95rem;
+}
+
+.linea {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 16px;
+  align-items: end;
+  min-height: 220px;
+}
+
+.punto {
+  position: relative;
+  border-radius: var(--radius-md);
+  background: linear-gradient(180deg, rgba(15, 93, 191, 0.18), rgba(15, 93, 191, 0.65));
+  height: calc(var(--altura) * 0.12px + 60px);
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 36px;
+  color: #0b3a78;
+  border: 1px solid rgba(12, 91, 191, 0.35);
+}
+
+.punto__valor {
+  position: absolute;
+  top: -32px;
+  font-weight: 600;
+  color: #0b3a78;
+}
+
+.punto__etiqueta {
+  position: absolute;
+  bottom: 8px;
+  font-size: 0.95rem;
+}
+
+.tabla .table-wrapper {
+  overflow-x: auto;
+}
+
+.tabla .btn {
+  min-width: 160px;
+}

@@ -1,1 +1,87 @@
-<p>busqueda works!</p>
+<section class="container busqueda">
+  <header class="section-heading">
+    <h1>Búsqueda de contribuyentes</h1>
+    <p>Consulta por RUT y ajusta filtros para priorizar tus revisiones.</p>
+  </header>
+
+  <div class="card filtros">
+    <div class="filtros__header">
+      <h2>Parámetros de consulta</h2>
+      <p class="text-muted">Datos de ejemplo sin conexión a servicios.</p>
+    </div>
+    <div class="filtros__grid">
+      <label class="campo">
+        <span>RUT</span>
+        <input type="text" placeholder="12.345.678-9" />
+      </label>
+      <label class="campo">
+        <span>Período</span>
+        <select>
+          <option value="" disabled selected>Selecciona período</option>
+          <option *ngFor="let periodo of periodos">{{ periodo }}</option>
+        </select>
+      </label>
+      <label class="campo">
+        <span>Giro</span>
+        <select>
+          <option value="" disabled selected>Selecciona giro</option>
+          <option *ngFor="let giro of giros">{{ giro }}</option>
+        </select>
+      </label>
+      <label class="campo">
+        <span>Rango de score</span>
+        <select>
+          <option value="" disabled selected>Selecciona rango</option>
+          <option *ngFor="let nivel of niveles">{{ nivel }}</option>
+        </select>
+      </label>
+    </div>
+    <div class="filtros__actions">
+      <button type="button" class="btn">Buscar</button>
+      <button type="button" class="btn btn-outline">Limpiar</button>
+    </div>
+  </div>
+
+  <div class="card resultados">
+    <div class="card-header">
+      <div>
+        <h2 class="card-title">Resultados (8)</h2>
+        <p class="card-subtitle">Listado estático con fines demostrativos.</p>
+      </div>
+      <button type="button" class="btn btn-link" disabled>Guardar búsqueda</button>
+    </div>
+    <div class="table-wrapper">
+      <table class="table" aria-label="Resultados de búsqueda de contribuyentes">
+        <thead>
+          <tr>
+            <th scope="col">RUT</th>
+            <th scope="col">Razón Social</th>
+            <th scope="col">Giro</th>
+            <th scope="col">Score</th>
+            <th scope="col">Nivel</th>
+            <th scope="col">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of resultados">
+            <td>{{ item.rut }}</td>
+            <td>{{ item.razonSocial }}</td>
+            <td>{{ item.giro }}</td>
+            <td>{{ item.score }}</td>
+            <td><span [class]="badgeClass(item.nivel)">{{ item.nivel }}</span></td>
+            <td>
+              <a [routerLink]="['/contribuyente', formatRutPath(item.rut)]" class="btn-link">
+                Ver detalle
+              </a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <nav class="pagination" aria-label="Paginación de resultados">
+      <button type="button" disabled aria-label="Página anterior">Anterior</button>
+      <button type="button" class="is-current" aria-current="page">1</button>
+      <button type="button" disabled aria-label="Página siguiente">Siguiente</button>
+    </nav>
+  </div>
+</section>

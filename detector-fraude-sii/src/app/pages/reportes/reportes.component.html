@@ -1,1 +1,74 @@
-<p>reportes works!</p>
+<section class="container reportes">
+  <header class="section-heading">
+    <h1>Reportes ejecutivos</h1>
+    <p>Visualiza la distribución de casos por nivel de riesgo y su evolución en el tiempo.</p>
+  </header>
+
+  <div class="resumen-grid">
+    <article class="card resumen-card" *ngFor="let item of resumen">
+      <h2>{{ item.value }}</h2>
+      <p class="label">{{ item.label }}</p>
+      <p class="description">{{ item.description }}</p>
+    </article>
+  </div>
+
+  <div class="charts">
+    <section class="card distribucion" aria-labelledby="distribucion-title">
+      <div class="card-header">
+        <h2 id="distribucion-title" class="card-title">Distribución por nivel</h2>
+        <p class="card-subtitle">Porcentaje de contribuyentes según clasificación actual.</p>
+      </div>
+      <div class="barras" role="img" aria-label="Gráfico de barras apiladas por nivel">
+        <div class="barra" *ngFor="let item of distribucion" [style.--porcentaje]="item.porcentaje">
+          <span class="barra__valor">{{ item.porcentaje }}%</span>
+          <span class="barra__etiqueta">{{ item.nivel }}</span>
+        </div>
+      </div>
+    </section>
+
+    <section class="card evolucion" aria-labelledby="evolucion-title">
+      <div class="card-header">
+        <h2 id="evolucion-title" class="card-title">Evolución semanal</h2>
+        <p class="card-subtitle">Casos monitoreados durante las últimas cuatro semanas.</p>
+      </div>
+      <div class="linea" role="img" aria-label="Gráfico de barras para casos semanales">
+        <div class="punto" *ngFor="let punto of evolucion" [style.--altura]="punto.casos">
+          <span class="punto__valor">{{ punto.casos }}</span>
+          <span class="punto__etiqueta">{{ punto.semana }}</span>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <section class="card tabla" aria-labelledby="tabla-title">
+    <div class="card-header">
+      <div>
+        <h2 id="tabla-title" class="card-title">Resumen por período</h2>
+        <p class="card-subtitle">Valores indicativos para análisis institucional.</p>
+      </div>
+      <button type="button" class="btn btn-outline" disabled>Exportar CSV</button>
+    </div>
+    <div class="table-wrapper">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Período</th>
+            <th>Total casos</th>
+            <th>Riesgo alto</th>
+            <th>Riesgo medio</th>
+            <th>Riesgo bajo</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let fila of tabla">
+            <td>{{ fila.periodo }}</td>
+            <td>{{ fila.total | number }}</td>
+            <td>{{ fila.alto | number }}</td>
+            <td>{{ fila.medio | number }}</td>
+            <td>{{ fila.bajo | number }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</section>
