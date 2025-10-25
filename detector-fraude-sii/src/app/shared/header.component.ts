@@ -9,7 +9,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
   template: `
     <header class="topbar">
       <div class="container topbar__inner">
-        <a routerLink="/" class="brand" aria-label="Ir al inicio">DF-SII</a>
+        <a routerLink="/" class="brand" aria-label="Ir al inicio">SIPAT</a>
         <nav class="nav" aria-label="Navegación principal">
           <a routerLink="/" routerLinkActive="active" class="nav__link">Inicio</a>
           <div class="nav__group" [ngClass]="{ 'nav__group--open': servicesOpen }">
@@ -77,7 +77,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
     }
     .nav__link:hover,
     .nav__link.active {
-      background: rgba(255, 255, 255, 0.18);
+      background: var(--color-highlight);
       color: #fff;
     }
     .nav__group {
