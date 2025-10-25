@@ -8,7 +8,8 @@ import { Component } from '@angular/core';
       <div class="container footer__inner">
         <div class="footer__col">
           <h4>Proyecto</h4>
-          <p>Detector de fraude SII — demostración de interfaz.</p>
+          <p><b>Sistema Predictivo de Auditoría Tributaria.</b></p>
+          <p><b>Creado por: </b>Carlos Fuentes - Ricardo Medina - Genesis Piña - Marcelo Rozas.</p>
         </div>
         <div class="footer__col">
           <h4>Recursos</h4>
@@ -25,7 +26,7 @@ import { Component } from '@angular/core';
           </ul>
         </div>
       </div>
-      <div class="footer__copy">© {{ year }} DF-SII — Uso interno</div>
+      <div class="footer__copy">© {{ year }} SIPAT</div>
     </footer>
   `,
   styles: [`
