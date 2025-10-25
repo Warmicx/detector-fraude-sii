@@ -5,40 +5,92 @@ import { Component } from '@angular/core';
   standalone: true,
   template: `
     <footer class="footer">
-      <div class="container">
-        <div class="cols">
-          <div>
-            <h4>Detector de Fraude SII</h4>
-            <p>Proyecto académico — Frontend Angular 16</p>
+      <div class="container footer__inner">
+        <div class="footer__cols">
+          <div class="footer__col">
+            <h4>Proyecto</h4>
+            <p>Detector de fraude SII es un prototipo interno orientado a exploración analítica.</p>
           </div>
-          <div>
+          <div class="footer__col">
             <h4>Recursos</h4>
             <ul>
-              <li><a href="#" rel="nofollow">API Docs</a></li>
-              <li><a href="#" rel="nofollow">Glosario</a></li>
+              <li><a href="#">Manual de uso</a></li>
+              <li><a href="#">Guía de estilos</a></li>
+              <li><a href="#">Cronograma</a></li>
             </ul>
           </div>
-          <div>
+          <div class="footer__col">
             <h4>Soporte</h4>
             <ul>
-              <li><a href="#/ayuda">Ayuda</a></li>
-              <li><a href="#" rel="nofollow">Contacto</a></li>
+              <li><a href="#/ayuda">Centro de ayuda</a></li>
+              <li><a href="#">Preguntas frecuentes</a></li>
+              <li><a href="#">Mesa de servicio</a></li>
             </ul>
           </div>
         </div>
-        <div class="copy">© {{year}} — Demo académica</div>
+        <div class="footer__copy">© {{ year }} DF-SII — Uso interno de referencia</div>
       </div>
     </footer>
   `,
-  styles: [`
-    .footer { background: #0f1b2b; color: #cfd6e4; padding: 32px 0 16px; }
-    .container { max-width: 1200px; margin: 0 auto; padding: 0 16px; }
-    .cols { display: grid; grid-template-columns: repeat(3,1fr); gap: 24px; }
-    .cols h4 { color: #fff; margin: 0 0 8px; }
-    .cols a { color: #cfd6e4; text-decoration: none; }
-    .copy { margin-top: 24px; font-size: 12px; opacity: .8; }
-    @media (max-width: 900px) { .cols { grid-template-columns: 1fr; } }
-  `]
+  styles: [
+    `
+      .footer {
+        background: #0f1926;
+        color: #d6deeb;
+        padding: 48px 0 24px;
+      }
+
+      .footer__cols {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 32px;
+      }
+
+      .footer__col h4 {
+        color: #fff;
+        margin-bottom: 12px;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+        font-size: 14px;
+      }
+
+      .footer__col p {
+        margin: 0;
+        font-size: 14px;
+        line-height: 1.6;
+      }
+
+      .footer__col ul {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: grid;
+        gap: 8px;
+      }
+
+      .footer__col a {
+        color: inherit;
+        text-decoration: none;
+      }
+
+      .footer__col a:hover,
+      .footer__col a:focus-visible {
+        color: #fff;
+      }
+
+      .footer__copy {
+        margin-top: 32px;
+        font-size: 12px;
+        letter-spacing: 0.03em;
+      }
+
+      @media (max-width: 900px) {
+        .footer__cols {
+          grid-template-columns: 1fr;
+        }
+      }
+    `,
+  ],
 })
 export class FooterComponent {
   year = new Date().getFullYear();
