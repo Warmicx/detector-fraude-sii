@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { NgFor, DatePipe } from '@angular/common';
+import { NgFor, NgIf, DatePipe } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
@@ -35,7 +35,7 @@ const API_BASE = 'https://hl1gdqsvoj.execute-api.us-east-1.amazonaws.com/prod';
 @Component({
   selector: 'app-busqueda',
   standalone: true,
-  imports: [NgFor, RouterLink, DatePipe],
+  imports: [NgFor, NgIf, RouterLink, DatePipe],
   templateUrl: './busqueda.component.html',
   styleUrls: ['./busqueda.component.scss'],
 })
@@ -51,6 +51,9 @@ export class BusquedaComponent implements OnInit {
   limit = 10;   // puedes setear 3 para calzar con tu ejemplo
   total = 0;
   pages = 0;
+
+  // Filas de placeholder para mantener altura mientras no hay datos
+  placeholders = Array.from({ length: 5 });
 
   // Filtros UI existentes (aún sin pegar al backend)
   periodos = ['Últimos 7 días', 'Últimos 30 días', 'Año en curso'];

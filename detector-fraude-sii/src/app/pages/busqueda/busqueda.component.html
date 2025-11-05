@@ -80,7 +80,21 @@
           </td>
         </tr>
       </tbody>
+      <tbody *ngIf="contribuyentes.length === 0">
+        <tr *ngFor="let _ of placeholders" class="placeholder-row" aria-hidden="true">
+          <td><span class="skeleton"></span></td>
+          <td><span class="skeleton"></span></td>
+          <td><span class="skeleton"></span></td>
+          <td><span class="skeleton"></span></td>
+          <td><span class="skeleton"></span></td>
+          <td><span class="skeleton"></span></td>
+          <td><span class="skeleton"></span></td>
+        </tr>
+      </tbody>
     </table>
+    <div *ngIf="loading" class="loading-overlay" aria-live="polite" aria-label="Cargando">
+      <div class="spinner" role="status"></div>
+    </div>
   </div>
   <nav class="pagination" aria-label="Paginación">
     <button
