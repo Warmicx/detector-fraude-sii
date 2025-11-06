@@ -3,19 +3,6 @@ import { NgFor, NgIf, DecimalPipe } from '@angular/common';
 import { ActivatedRoute } from '@angular/router';
 import { HttpClient, HttpParams } from '@angular/common/http';
 
-interface Regla {
-  nombre: string;
-  descripcion: string;
-}
-interface Actividad {
-  fecha: string;
-  descripcion: string;
-}
-interface Historico {
-  periodo: string;
-  valor: number;
-}
-
 // ===== Tipos de la API nueva =====
 type DetalleItem = {
   _id: string;
@@ -47,22 +34,12 @@ export class ContribuyenteComponent implements OnInit {
   private http = inject(HttpClient);
   private route = inject(ActivatedRoute);
 
-  // === Datos “cabecera” (por ahora mock, como tenías) ===
-  contribuyente = {
-    rut: '11.111.111-1',
-    razonSocial: 'Cabañas EcoLazos SpA',
-    giro: 'Cabañas',
-    comuna: 'Santiago',
-    score: 812,
-    nivel: 'ALTO' as const,
-  };
-
   // === Estado UI ===
   loading = false;
   errorMsg: string | null = null;
 
   // === Parámetros para el backend (por defecto: ruta o fecha actual) ===
-  rutParam!: string; // numérico sin puntos; o viene desde la ruta
+  rutParam!: string; // numérico sin puntos; viene desde la ruta
   anio = new Date().getFullYear();
   mes = new Date().getMonth() + 1; // 1..12
 
@@ -70,40 +47,18 @@ export class ContribuyenteComponent implements OnInit {
   detalle: DetalleItem | null = null;
   productos: string[] = [];
 
-  // === Contenido existente (se mantiene) ===
-  reglas: Regla[] = [
-    { nombre: 'Volumen inusual de facturación', descripcion: 'Variación superior al 54% respecto del promedio trimestral.' },
-    { nombre: 'Giro Incongruente', descripcion: 'Declaraciones de compras sin correlación con giro.' },
-  ];
-
-  actividades: Actividad[] = [
-    { fecha: '06 JUL 2025', descripcion: 'Analista regional registró revisión manual de documentos respaldatorios.' },
-    { fecha: '03 SEP 2025', descripcion: 'Se generó alerta de severidad alta por patrón de gastos atípicos.' },
-    { fecha: '25 OCT 2025', descripcion: 'Score recalculado con actualización de variables de comportamiento mensual.' },
-  ];
-
-  historico: Historico[] = [
-    { periodo: 'ENE', valor: 520 },
-    { periodo: 'FEB', valor: 560 },
-    { periodo: 'MAR', valor: 640 },
-    { periodo: 'ABR', valor: 780 },
-    { periodo: 'MAY', valor: 812 },
-  ];
-
   ngOnInit(): void {
     // 1) Tomamos el rut desde la URL si existe (viene desde /contribuyente/:rut)
     const rutFromRoute = this.route.snapshot.paramMap.get('rut');
     if (rutFromRoute) {
       this.rutParam = rutFromRoute.replace(/\D+/g, ''); // ya debería venir numérico (p.ej. 74001442)
-      // Reflejar en la cabecera para que no quede el mock
-      this.contribuyente.rut = this.formateaRutSimple(this.rutParam);
     } else {
-      // Fallback: tratamos de limpiar el mock
-      const digits = this.contribuyente.rut.replace(/\D+/g, '');
-      this.rutParam = digits; // ojo: puede incluir DV si viene del mock
+      // Si no hay rut en la ruta, no intentamos cargar
+      this.rutParam = '';
     }
-
-    this.fetchDetalle();
+    if (this.rutParam) {
+      this.fetchDetalle();
+    }
   }
 
   fetchDetalle(): void {

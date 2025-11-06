@@ -315,3 +315,40 @@
 
 .error { color: #b91c1c; }
 .empty { color: #6b7280; }
+
+/* Acciones y estados vacíos elegantes */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  background: var(--color-primary);
+  color: #fff;
+  border: 1px solid var(--color-primary);
+  border-radius: 10px;
+  padding: .6rem .9rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.btn:hover { filter: brightness(0.95); }
+.btn:disabled { opacity: .7; cursor: not-allowed; }
+.btn--ghost {
+  background: transparent;
+  color: var(--color-primary);
+  border-color: #d1d5db;
+}
+
+.empty-state {
+  border: 1px dashed #d1d5db;
+  background: #fcfcfd;
+  border-radius: 16px;
+  padding: 20px;
+  text-align: center;
+}
+.empty-state__icon { font-size: 1.6rem; margin-bottom: .25rem; }
+.empty-state h3 { margin: .25rem 0; }
+.empty-state p { margin: 0 0 .5rem; color: #6b7280; }
+.empty-actions { display: inline-flex; gap: .5rem; }
+
+/* Ajustes del bloque summary para la zona de periodo/estado */
+.summary__period { margin-left: auto; }
+.summary__status { margin-left: auto; }

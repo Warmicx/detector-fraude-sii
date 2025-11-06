@@ -1,12 +1,6 @@
-<!-- ====== Detalle mensual (nuevo) ====== -->
+<!-- Detalle mensual (único bloque, sin mocks) -->
 <section class="card card--wide relative" aria-labelledby="detalle-title">
   <h2 id="detalle-title">Detalle mensual</h2>
-
-  <!-- Spinner overlay -->
-  <div class="loading-overlay" *ngIf="loading" aria-live="polite" aria-busy="true">
-    <div class="spinner" role="status" aria-label="Cargando"></div>
-    <span class="loading-text">Cargando…</span>
-  </div>
 
   <!-- Controles de periodo -->
   <div class="periodo">
@@ -18,7 +12,13 @@
   <!-- Error -->
   <p class="error" *ngIf="!loading && errorMsg">{{ errorMsg }}</p>
 
-  <!-- Datos -->
+  <!-- Overlay de carga -->
+  <div class="loading-overlay" *ngIf="loading" aria-live="polite" aria-busy="true">
+    <div class="spinner" role="status" aria-label="Cargando"></div>
+    <span class="loading-text">Cargando…</span>
+  </div>
+
+  <!-- Resumen de KPIs (solo si hay datos) -->
   <div class="grid-resumen" *ngIf="!loading && detalle">
     <div class="kpi">
       <p class="kpi__label">DTE del mes</p>
@@ -50,14 +50,22 @@
     </div>
   </div>
 
-  <!-- Productos -->
+  <!-- Productos del mes -->
   <div class="productos" *ngIf="!loading && productos.length">
-    <h3>Productos únicos (mes)</h3>
+    <h3>Productos vendidos (únicos)</h3>
     <div class="chips">
       <span class="chip" *ngFor="let p of productos">{{ p }}</span>
     </div>
   </div>
 
-  <!-- Vacío -->
-  <p class="empty" *ngIf="!loading && !errorMsg && !detalle">Sin datos para el período.</p>
+  <!-- Estado vacío elegante -->
+  <div class="empty-state" *ngIf="!loading && !errorMsg && !detalle">
+    <div class="empty-state__icon" aria-hidden="true">🗓️</div>
+    <h3>Sin datos para {{ mes | number:'2.0' }}/{{ anio }}</h3>
+    <p>No encontramos movimientos en este mes. Prueba cambiar el periodo o revisar meses cercanos.</p>
+    <div class="empty-actions">
+      <button type="button" class="btn" (click)="cambiarPeriodo(-1)">Mes anterior</button>
+      <button type="button" class="btn btn--ghost" (click)="cambiarPeriodo(1)">Mes siguiente</button>
+    </div>
+  </div>
 </section>
