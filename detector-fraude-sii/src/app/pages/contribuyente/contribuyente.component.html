@@ -1,53 +1,63 @@
-<section class="container contribuyente">
-  <header class="summary">
-    <div>
-      <p class="summary__label">RUT</p>
-      <h1>{{ contribuyente.rut }}</h1>
-      <p class="summary__subtitle">{{ contribuyente.razonSocial }}</p>
-      <p class="summary__meta">{{ contribuyente.giro }} · {{ contribuyente.comuna }}</p>
-    </div>
-    <div class="summary__score">
-      <span class="summary__score-value">{{ contribuyente.score }}</span>
-      <span class="summary__badge" [class.summary__badge--alto]="contribuyente.nivel === 'ALTO'">
-        {{ contribuyente.nivel }}
-      </span>
-      <span class="summary__score-label">Score de riesgo</span>
-    </div>
-  </header>
+<!-- ====== Detalle mensual (nuevo) ====== -->
+<section class="card card--wide relative" aria-labelledby="detalle-title">
+  <h2 id="detalle-title">Detalle mensual</h2>
 
-  <div class="grid">
-    <section class="card" aria-labelledby="reglas-title">
-      <h2 id="reglas-title">Reglas activadas</h2>
-      <div class="chips">
-        <span class="chip" *ngFor="let regla of reglas">{{ regla.nombre }}</span>
-      </div>
-      <ul class="reglas">
-        <li *ngFor="let regla of reglas">
-          <h3>{{ regla.nombre }}</h3>
-          <p>{{ regla.descripcion }}</p>
-        </li>
-      </ul>
-    </section>
-
-    <section class="card" aria-labelledby="actividad-title">
-      <h2 id="actividad-title">Actividad reciente</h2>
-      <ol class="timeline">
-        <li *ngFor="let actividad of actividades">
-          <span class="timeline__date">{{ actividad.fecha }}</span>
-          <p>{{ actividad.descripcion }}</p>
-        </li>
-      </ol>
-    </section>
-
-    <section class="card card--wide" aria-labelledby="historico-title">
-      <h2 id="historico-title">Histórico de score</h2>
-      <div class="chart" role="img" aria-label="Histórico de score en los últimos meses">
-        <div class="chart__bar" *ngFor="let item of historico" [style.--value]="item.valor">
-          <div class="chart__bar-fill"></div>
-          <span class="chart__label">{{ item.periodo }}</span>
-          <span class="chart__value">{{ item.valor }}</span>
-        </div>
-      </div>
-    </section>
+  <!-- Spinner overlay -->
+  <div class="loading-overlay" *ngIf="loading" aria-live="polite" aria-busy="true">
+    <div class="spinner" role="status" aria-label="Cargando"></div>
+    <span class="loading-text">Cargando…</span>
   </div>
+
+  <!-- Controles de periodo -->
+  <div class="periodo">
+    <button type="button" (click)="cambiarPeriodo(-1)" [disabled]="loading" aria-label="Mes anterior">‹</button>
+    <span>{{ mes | number:'2.0' }}/{{ anio }}</span>
+    <button type="button" (click)="cambiarPeriodo(1)" [disabled]="loading" aria-label="Mes siguiente">›</button>
+  </div>
+
+  <!-- Error -->
+  <p class="error" *ngIf="!loading && errorMsg">{{ errorMsg }}</p>
+
+  <!-- Datos -->
+  <div class="grid-resumen" *ngIf="!loading && detalle">
+    <div class="kpi">
+      <p class="kpi__label">DTE del mes</p>
+      <p class="kpi__value">{{ detalle.suma_dte | number:'1.0-0' }}</p>
+    </div>
+    <div class="kpi">
+      <p class="kpi__label">Monto neto</p>
+      <p class="kpi__value">$ {{ monto(detalle.suma_monto_neto) }}</p>
+    </div>
+    <div class="kpi">
+      <p class="kpi__label">Monto IVA</p>
+      <p class="kpi__value">$ {{ monto(detalle.suma_monto_iva) }}</p>
+    </div>
+    <div class="kpi">
+      <p class="kpi__label">Monto total</p>
+      <p class="kpi__value">$ {{ monto(detalle.suma_monto_total) }}</p>
+    </div>
+    <div class="kpi">
+      <p class="kpi__label">Promedio monto (mes)</p>
+      <p class="kpi__value">$ {{ monto(detalle.monto_promedio) }}</p>
+    </div>
+    <div class="kpi">
+      <p class="kpi__label">DTE (últ. 6 meses)</p>
+      <p class="kpi__value">{{ detalle.dte_6m | number:'1.0-0' }}</p>
+    </div>
+    <div class="kpi">
+      <p class="kpi__label">Promedio monto (6m)</p>
+      <p class="kpi__value">$ {{ monto(detalle.promedio_monto_6m) }}</p>
+    </div>
+  </div>
+
+  <!-- Productos -->
+  <div class="productos" *ngIf="!loading && productos.length">
+    <h3>Productos únicos (mes)</h3>
+    <div class="chips">
+      <span class="chip" *ngFor="let p of productos">{{ p }}</span>
+    </div>
+  </div>
+
+  <!-- Vacío -->
+  <p class="empty" *ngIf="!loading && !errorMsg && !detalle">Sin datos para el período.</p>
 </section>
