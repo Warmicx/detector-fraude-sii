@@ -8,8 +8,16 @@
     <div class="filters__row">
       <label>
         <span>RUT</span>
-        <input type="text" placeholder="12.345.678-9" />
+        <input
+          type="text"
+          placeholder="12.345.678-9"
+          [(ngModel)]="rutQuery"
+          (keyup.enter)="onBuscar()"
+          (input)="onRutInput()"
+          aria-describedby="rut-help"
+        />
       </label>
+
       <label>
         <span>Período</span>
         <select>
@@ -30,8 +38,22 @@
       </label>
     </div>
     <div class="filters__actions">
-      <button type="button" class="btn">Buscar</button>
-      <button type="button" class="btn btn--ghost" disabled>Limpiar</button>
+      <button
+        type="button"
+        class="btn"
+        (click)="onBuscar()"
+        [disabled]="loading"
+      >
+        Buscar
+      </button>
+      <button
+        type="button"
+        class="btn btn--ghost"
+        (click)="onLimpiar()"
+        [disabled]="loading && !rutQuery"
+      >
+        Limpiar
+      </button>
     </div>
   </div>
 </section>
@@ -51,7 +73,7 @@
         </tr>
       </thead>
       <tbody>
-        <tr *ngFor="let item of contribuyentes">
+        <tr *ngFor="let item of listaVisible()">
           <td data-title="RUT">{{ item.rut }}</td>
           <td data-title="Razón Social">{{ item.razonSocial }}</td>
           <td data-title="Giro">{{ item.giro }}</td>
@@ -80,19 +102,24 @@
           </td>
         </tr>
       </tbody>
-      <tbody *ngIf="contribuyentes.length === 0">
-        <tr *ngFor="let _ of placeholders" class="placeholder-row" aria-hidden="true">
-          <td><span class="skeleton"></span></td>
-          <td><span class="skeleton"></span></td>
-          <td><span class="skeleton"></span></td>
-          <td><span class="skeleton"></span></td>
-          <td><span class="skeleton"></span></td>
-          <td><span class="skeleton"></span></td>
-          <td><span class="skeleton"></span></td>
+      <tbody *ngIf="!loading && listaVisible().length === 0">
+        <tr
+          *ngFor="let _ of placeholders"
+          class="placeholder-row"
+          aria-hidden="true"
+        >
+          <td colspan="7" class="empty-state">
+            Sin resultados con el RUT ingresado en esta página.
+          </td>
         </tr>
       </tbody>
     </table>
-    <div *ngIf="loading" class="loading-overlay" aria-live="polite" aria-label="Cargando">
+    <div
+      *ngIf="loading"
+      class="loading-overlay"
+      aria-live="polite"
+      aria-label="Cargando"
+    >
       <div class="spinner" role="status"></div>
     </div>
   </div>
