@@ -1,19 +1,68 @@
-<!-- Detalle mensual (único bloque, sin mocks) -->
+<!-- Resumen del contribuyente -->
+<section class="summary" *ngIf="!loading && detalle">
+  <div>
+    <p class="summary__label">Contribuyente</p>
+    <h1>{{ detalle.razon_social || "—" }}</h1>
+    <p class="summary__subtitle">{{ detalle.actividad_economica || "—" }}</p>
+    <p class="summary__meta">
+      RUT: {{ rutDisplay || formateaRutSimple(rutParam) }}
+    </p>
+    <p class="summary__meta" *ngIf="fechaActualizacion(detalle)">
+      Actualizado: {{ fechaActualizacion(detalle) }}
+    </p>
+  </div>
+  <div class="summary__score" aria-live="polite">
+    <div class="summary__score-value">{{ detalle.score ?? "—" }}</div>
+    <span [class]="riesgoBadgeClass(detalle.nivel_riesgo)">{{
+      detalle.nivel_riesgo || "SIN NIVEL"
+    }}</span>
+    <div class="summary__score-label">Score de riesgo</div>
+  </div>
+</section>
+
+<!-- Detalle mensual (bloque principal, datos reales) -->
 <section class="card card--wide relative" aria-labelledby="detalle-title">
   <h2 id="detalle-title">Detalle mensual</h2>
 
   <!-- Controles de periodo -->
   <div class="periodo">
-    <button type="button" (click)="cambiarPeriodo(-1)" [disabled]="loading" aria-label="Mes anterior">‹</button>
-    <span>{{ mes | number:'2.0' }}/{{ anio }}</span>
-    <button type="button" (click)="cambiarPeriodo(1)" [disabled]="loading" aria-label="Mes siguiente">›</button>
+    <button
+      type="button"
+      (click)="cambiarPeriodo(-1)"
+      [disabled]="loading"
+      aria-label="Mes anterior"
+    >
+      «
+    </button>
+    <span>{{ mes | number : "2.0" }}/{{ anio }}</span>
+    <button
+      type="button"
+      (click)="cambiarPeriodo(1)"
+      [disabled]="loading"
+      aria-label="Mes siguiente"
+    >
+      »
+    </button>
+
+    <input
+      type="month"
+      [value]="anio + '-' + (mes < 10 ? '0' + mes : mes)"
+      (change)="onMonthPick($event)"
+      [disabled]="loading"
+      aria-label="Seleccionar mes"
+    />
   </div>
 
   <!-- Error -->
   <p class="error" *ngIf="!loading && errorMsg">{{ errorMsg }}</p>
 
   <!-- Overlay de carga -->
-  <div class="loading-overlay" *ngIf="loading" aria-live="polite" aria-busy="true">
+  <div
+    class="loading-overlay"
+    *ngIf="loading"
+    aria-live="polite"
+    aria-busy="true"
+  >
     <div class="spinner" role="status" aria-label="Cargando"></div>
     <span class="loading-text">Cargando…</span>
   </div>
@@ -21,13 +70,33 @@
   <!-- Resumen de KPIs (solo si hay datos) -->
   <div class="grid-resumen" *ngIf="!loading && detalle">
     <div class="kpi">
-      <p class="kpi__label">DTE del mes</p>
-      <p class="kpi__value">{{ detalle.suma_dte | number:'1.0-0' }}</p>
+      <p class="kpi__label" data-kpi="dte">
+        DTE del mes
+        <span class="tooltip">
+          <span class="tooltip__icon">i</span>
+          <span class="tooltip__bubble">
+            <b>DTE del mes</b>: número de documentos tributarios emitidos en el
+            período (facturas/boletas, etc.).<br />
+            <span class="muted">Fuente: servicio de detalle mensual.</span>
+          </span>
+        </span>
+      </p>
+      <p class="kpi__value">{{ detalle.suma_dte | number : "1.0-0" }}</p>
     </div>
+
     <div class="kpi">
-      <p class="kpi__label">Monto neto</p>
-      <p class="kpi__value">$ {{ monto(detalle.suma_monto_neto) }}</p>
+      <p class="kpi__label" data-kpi="monto">
+        Monto total
+        <span class="tooltip">
+          <span class="tooltip__icon">i</span>
+          <span class="tooltip__bubble">
+            <b>Monto total</b>: suma de neto + IVA registrado en el período.
+          </span>
+        </span>
+      </p>
+      <p class="kpi__value">$ {{ monto(detalle.suma_monto_total) }}</p>
     </div>
+
     <div class="kpi">
       <p class="kpi__label">Monto IVA</p>
       <p class="kpi__value">$ {{ monto(detalle.suma_monto_iva) }}</p>
@@ -40,13 +109,34 @@
       <p class="kpi__label">Promedio monto (mes)</p>
       <p class="kpi__value">$ {{ monto(detalle.monto_promedio) }}</p>
     </div>
+
     <div class="kpi">
-      <p class="kpi__label">DTE (últ. 6 meses)</p>
-      <p class="kpi__value">{{ detalle.dte_6m | number:'1.0-0' }}</p>
+      <p class="kpi__label" data-kpi="prom">
+        Promedio monto (mes)
+        <span class="tooltip">
+          <span class="tooltip__icon">i</span>
+          <span class="tooltip__bubble">
+            <b>Promedio del mes</b>: <code>monto_total / DTE</code> (ticket
+            promedio).<br />
+            <span class="muted">Si <code>DTE = 0</code>, se muestra “—”.</span>
+          </span>
+        </span>
+      </p>
+      <p class="kpi__value">$ {{ monto(detalle.monto_promedio) }}</p>
     </div>
+
     <div class="kpi">
-      <p class="kpi__label">Promedio monto (6m)</p>
-      <p class="kpi__value">$ {{ monto(detalle.promedio_monto_6m) }}</p>
+      <p class="kpi__label" data-kpi="prom">
+        Promedio monto total (6m)
+        <span class="tooltip">
+          <span class="tooltip__icon">i</span>
+          <span class="tooltip__bubble">
+            <b>Promedio 6 meses</b>: media de los montos totales en los últimos
+            6 meses.
+          </span>
+        </span>
+      </p>
+      <p class="kpi__value">$ {{ monto(promedioMontoTotal6m(detalle)) }}</p>
     </div>
   </div>
 
@@ -58,14 +148,226 @@
     </div>
   </div>
 
+  <!-- Glosas del score / reglas activadas -->
+  <div class="productos" *ngIf="!loading && scoreGlosas(detalle).length">
+    <h3>Glosas del score</h3>
+    <ul class="reglas">
+      <li *ngFor="let g of scoreGlosas(detalle); let i = index">
+        <h3>Regla {{ i + 1 }}</h3>
+        <p>{{ g }}</p>
+      </li>
+    </ul>
+  </div>
+
   <!-- Estado vacío elegante -->
   <div class="empty-state" *ngIf="!loading && !errorMsg && !detalle">
-    <div class="empty-state__icon" aria-hidden="true">🗓️</div>
-    <h3>Sin datos para {{ mes | number:'2.0' }}/{{ anio }}</h3>
-    <p>No encontramos movimientos en este mes. Prueba cambiar el periodo o revisar meses cercanos.</p>
+    <div class="empty-state__icon" aria-hidden="true">🛈</div>
+    <h3>Sin datos para {{ mes | number : "2.0" }}/{{ anio }}</h3>
+    <p>
+      No encontramos movimientos en este mes. Prueba cambiar el periodo o
+      revisar meses cercanos.
+    </p>
     <div class="empty-actions">
-      <button type="button" class="btn" (click)="cambiarPeriodo(-1)">Mes anterior</button>
-      <button type="button" class="btn btn--ghost" (click)="cambiarPeriodo(1)">Mes siguiente</button>
+      <button type="button" class="btn" (click)="cambiarPeriodo(-1)">
+        Mes anterior
+      </button>
+      <button type="button" class="btn btn--ghost" (click)="cambiarPeriodo(1)">
+        Mes siguiente
+      </button>
+    </div>
+  </div>
+
+  <!-- Tendencias -->
+  <div class="kpi kpi--trend" *ngIf="!loading && detalle">
+    <div class="trend-row">
+      <span class="trend-label">
+        DTE vs promedio 6m
+        <span class="tooltip">
+          <span class="tooltip__icon">i</span>
+          <span class="tooltip__bubble">
+            <b>Comparación relativa</b>: variación porcentual del DTE del mes
+            respecto al promedio de los últimos 6 meses.<br />
+            <span class="muted"
+              >Positivo = más actividad que el promedio; negativo = menos.</span
+            >
+          </span>
+        </span>
+      </span>
+      <ng-container
+        *ngIf="
+          trendInfo(deltaPct(detalle?.suma_dte, promedioDte6m(detalle))) as t
+        "
+      >
+        <span [class]="t.cls" [attr.aria-label]="'Tendencia: ' + t.label"
+          >{{ t.icon }} {{ t.label }}</span
+        >
+      </ng-container>
+    </div>
+
+    <div class="trend-row">
+      <span class="trend-label">
+        Monto promedio vs 6m
+        <span class="tooltip">
+          <span class="tooltip__icon">i</span>
+          <span class="tooltip__bubble">
+            <b>Ticket promedio</b>: compara el ticket promedio del mes vs la
+            media de 6 meses.
+          </span>
+        </span>
+      </span>
+      <ng-container
+        *ngIf="
+          trendInfo(
+            deltaPct(detalle?.monto_promedio, promedioMontoTotal6m(detalle))
+          ) as t
+        "
+      >
+        <span [class]="t.cls" [attr.aria-label]="'Tendencia: ' + t.label"
+          >{{ t.icon }} {{ t.label }}</span
+        >
+      </ng-container>
     </div>
   </div>
 </section>
+
+<section class="card card--wide" aria-labelledby="serie-title">
+  <h2 id="serie-title">Tendencia 6 meses</h2>
+
+  <div class="loading-overlay" *ngIf="loadingSerie">
+    <div class="spinner"></div>
+  </div>
+
+  <div *ngIf="!loadingSerie && serie6m.length" class="spark-wrap">
+    <!-- Sparkline de monto total -->
+    <div class="spark" role="img" aria-label="Monto total últimos 6 meses">
+      <div
+        class="spark__bar"
+        *ngFor="let m of serie6m; let i = index"
+        [style.--val]="m.suma_monto_total || 0"
+        [style.--max]="getMaxMonto()"
+        [title]="
+          (m.mes | number : '2.0') +
+          '/' +
+          m.anio +
+          ' — $' +
+          monto(m.suma_monto_total || 0)
+        "
+      >
+        <span class="spark__label">{{ m.mes | number : "2.0" }}</span>
+      </div>
+    </div>
+
+    <!-- Tabla compacta -->
+    <div class="table-scroll">
+      <table class="mini-table">
+        <thead>
+          <tr>
+            <th>Período</th>
+            <th>
+              Monto total
+              <span class="tooltip">
+                <span class="tooltip__icon">i</span>
+                <span class="tooltip__bubble"
+                  >Suma (neto + IVA) del mes seleccionado.</span
+                >
+              </span>
+            </th>
+            <th>
+              DTE
+              <span class="tooltip">
+                <span class="tooltip__icon">i</span>
+                <span class="tooltip__bubble"
+                  >Documentos emitidos ese mes.</span
+                >
+              </span>
+            </th>
+            <th>
+              Ticket prom.
+              <span class="tooltip">
+                <span class="tooltip__icon">i</span>
+                <span class="tooltip__bubble">Monto total / DTE del mes.</span>
+              </span>
+            </th>
+
+            <th>Productos únicos</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let m of serie6m">
+            <td>{{ m.mes | number : "2.0" }}/{{ m.anio }}</td>
+            <td>$ {{ monto(m.suma_monto_total) }}</td>
+            <td>{{ m.suma_dte ?? "—" }}</td>
+            <td>$ {{ monto(m.monto_promedio) }}</td>
+            <td>{{ m.productos_unicos?.length || 0 }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <p *ngIf="!loadingSerie && !serie6m.length" class="empty">
+    Sin datos en los últimos 6 meses.
+  </p>
+
+  <div class="kpi kpi--trend" *ngIf="!loadingSerie && deltaMoM() as mom">
+    <div class="trend-row">
+      <span class="trend-label">Monto total MoM</span>
+      <ng-container *ngIf="trendInfo(mom.dMonto) as t">
+        <span [class]="t.cls">{{ t.icon }} {{ t.label }}</span>
+      </ng-container>
+    </div>
+    <div class="trend-row">
+      <span class="trend-label">DTE MoM</span>
+      <ng-container *ngIf="trendInfo(mom.dDte) as t">
+        <span [class]="t.cls">{{ t.icon }} {{ t.label }}</span>
+      </ng-container>
+    </div>
+  </div>
+</section>
+
+<details class="guia" aria-labelledby="guia-title">
+  <summary id="guia-title">¿Qué significa cada indicador?</summary>
+  <div class="deflist">
+    <div class="deflist__item">
+      <div class="deflist__term">DTE del mes</div>
+      <div class="deflist__desc">
+        Cantidad de documentos tributarios emitidos en el período (facturas,
+        boletas, etc.).
+      </div>
+    </div>
+    <div class="deflist__item">
+      <div class="deflist__term">Monto neto / IVA / total</div>
+      <div class="deflist__desc">
+        Particiones del monto declarado: <em>neto</em>, <em>IVA</em> (impuesto)
+        y <em>total</em> (= neto + IVA).
+      </div>
+    </div>
+    <div class="deflist__item">
+      <div class="deflist__term">Promedio monto (mes)</div>
+      <div class="deflist__desc">
+        Ticket promedio del período: <code>monto_total / DTE</code>.
+      </div>
+    </div>
+    <div class="deflist__item">
+      <div class="deflist__term">Promedio (6m)</div>
+      <div class="deflist__desc">
+        Media simple del indicador en los últimos 6 meses (contexto histórico).
+      </div>
+    </div>
+    <div class="deflist__item">
+      <div class="deflist__term">DTE vs Promedio 6m / MoM</div>
+      <div class="deflist__desc">
+        Variaciones porcentuales respecto de (a) el promedio de 6 meses y (b) el
+        mes inmediatamente anterior.
+      </div>
+    </div>
+    <div class="deflist__item">
+      <div class="deflist__term">Productos vendidos (únicos)</div>
+      <div class="deflist__desc">
+        Conteo y listado de productos distintos reportados en el mes (proxy de
+        variedad de oferta).
+      </div>
+    </div>
+  </div>
+</details>
+|

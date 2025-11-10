@@ -1,0 +1,72 @@
+﻿<!-- Detalle mensual (Ãºnico bloque, sin mocks) -->
+<section class="card card--wide relative" aria-labelledby="detalle-title">
+  <h2 id="detalle-title">Detalle mensual</h2>
+
+  <!-- Controles de periodo -->
+  <div class="periodo">
+    <button type="button" (click)="cambiarPeriodo(-1)" [disabled]="loading" aria-label="Mes anterior">â€¹</button>
+    <span>{{ mes | number:'2.0' }}/{{ anio }}</span>
+    <button type="button" (click)="cambiarPeriodo(1)" [disabled]="loading" aria-label="Mes siguiente">â€º</button>
+  </div>
+
+  <!-- Error -->
+  <p class="error" *ngIf="!loading && errorMsg">{{ errorMsg }}</p>
+
+  <!-- Overlay de carga -->
+  <div class="loading-overlay" *ngIf="loading" aria-live="polite" aria-busy="true">
+    <div class="spinner" role="status" aria-label="Cargando"></div>
+    <span class="loading-text">Cargandoâ€¦</span>
+  </div>
+
+  <!-- Resumen de KPIs (solo si hay datos) -->
+  <div class="grid-resumen" *ngIf="!loading && detalle">
+    <div class="kpi">
+      <p class="kpi__label">DTE del mes</p>
+      <p class="kpi__value">{{ detalle.suma_dte | number:'1.0-0' }}</p>
+    </div>
+    <div class="kpi">
+      <p class="kpi__label">Monto neto</p>
+      <p class="kpi__value">$ {{ monto(detalle.suma_monto_neto) }}</p>
+    </div>
+    <div class="kpi">
+      <p class="kpi__label">Monto IVA</p>
+      <p class="kpi__value">$ {{ monto(detalle.suma_monto_iva) }}</p>
+    </div>
+    <div class="kpi">
+      <p class="kpi__label">Monto total</p>
+      <p class="kpi__value">$ {{ monto(detalle.suma_monto_total) }}</p>
+    </div>
+    <div class="kpi">
+      <p class="kpi__label">Promedio monto (mes)</p>
+      <p class="kpi__value">$ {{ monto(detalle.monto_promedio) }}</p>
+    </div>
+    <div class="kpi">
+      <p class="kpi__label">DTE (Ãºlt. 6 meses)</p>
+      <p class="kpi__value">{{ detalle.dte_6m | number:'1.0-0' }}</p>
+    </div>
+    <div class="kpi">
+      <p class="kpi__label">Promedio monto (6m)</p>
+      <p class="kpi__value">$ {{ monto(detalle.promedio_monto_6m) }}</p>
+    </div>
+  </div>
+
+  <!-- Productos del mes -->
+  <div class="productos" *ngIf="!loading && productos.length">
+    <h3>Productos vendidos (Ãºnicos)</h3>
+    <div class="chips">
+      <span class="chip" *ngFor="let p of productos">{{ p }}</span>
+    </div>
+  </div>
+
+  <!-- Estado vacÃ­o elegante -->
+  <div class="empty-state" *ngIf="!loading && !errorMsg && !detalle">
+    <div class="empty-state__icon" aria-hidden="true">ðŸ—“ï¸</div>
+    <h3>Sin datos para {{ mes | number:'2.0' }}/{{ anio }}</h3>
+    <p>No encontramos movimientos en este mes. Prueba cambiar el periodo o revisar meses cercanos.</p>
+    <div class="empty-actions">
+      <button type="button" class="btn" (click)="cambiarPeriodo(-1)">Mes anterior</button>
+      <button type="button" class="btn btn--ghost" (click)="cambiarPeriodo(1)">Mes siguiente</button>
+    </div>
+  </div>
+</section>
+
