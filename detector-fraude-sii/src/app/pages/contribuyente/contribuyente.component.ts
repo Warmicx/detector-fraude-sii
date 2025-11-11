@@ -155,10 +155,17 @@ export class ContribuyenteComponent implements OnInit {
   }
 
   riesgoBadgeClass(nivel?: string | null): string {
-    const n = (nivel || '').toString().toLowerCase();
-    return n === 'alto'
-      ? 'summary__badge summary__badge--alto'
-      : 'summary__badge';
+    const n = (nivel || '').toString().trim().toUpperCase();
+    switch (n) {
+      case 'ALTO':
+        return 'summary__badge summary__badge--alto';
+      case 'MEDIO':
+        return 'summary__badge summary__badge--medio';
+      case 'BAJO':
+        return 'summary__badge summary__badge--bajo';
+      default:
+        return 'summary__badge';
+    }
   }
 
   fechaActualizacion(det?: DetalleItem | null): string | null {

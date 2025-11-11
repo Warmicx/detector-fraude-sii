@@ -88,9 +88,9 @@
           <td data-title="Nivel">
             <span
               class="badge"
-              [class.badge--alto]="item.nivel === 'ALTO'"
-              [class.badge--medio]="item.nivel === 'MEDIO'"
-              [class.badge--bajo]="item.nivel === 'BAJO'"
+              [class.badge--alto]="(item.nivel || '').toUpperCase() === 'ALTO'"
+              [class.badge--medio]="(item.nivel || '').toUpperCase() === 'MEDIO'"
+              [class.badge--bajo]="(item.nivel || '').toUpperCase() === 'BAJO'"
             >
               {{ item.nivel }}
             </span>
