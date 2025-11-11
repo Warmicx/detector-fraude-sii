@@ -354,6 +354,22 @@ export class ContribuyenteComponent implements OnInit {
     );
   }
 
+  isCurrentPeriod(m: { anio: number; mes: number }): boolean {
+    return m.anio === this.anio && m.mes === this.mes;
+  }
+
+  abreviaMonto(v?: number | null): string {
+    if (v == null) return '-';
+    const n = Math.abs(v);
+    const sign = v < 0 ? '-' : '';
+    const fmt = (num: number) =>
+      num.toLocaleString('es-CL', { maximumFractionDigits: 1, minimumFractionDigits: 0 });
+    if (n >= 1_000_000_000) return `${sign}$${fmt(n / 1_000_000_000)}B`;
+    if (n >= 1_000_000) return `${sign}$${fmt(n / 1_000_000)}M`;
+    if (n >= 1_000) return `${sign}$${fmt(n / 1_000)}K`;
+    return `${sign}$${fmt(n)}`;
+  }
+
   deltaMoM() {
     if (this.serie6m.length < 2) return null;
     const cur = this.serie6m[this.serie6m.length - 1];

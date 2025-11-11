@@ -255,15 +255,18 @@
         *ngFor="let m of serie6m; let i = index"
         [style.--val]="m.suma_monto_total || 0"
         [style.--max]="getMaxMonto()"
+        [class.is-max]="(m.suma_monto_total || 0) === getMaxMonto()"
+        [class.is-current]="isCurrentPeriod(m)"
         [title]="
           (m.mes | number : '2.0') +
           '/' +
           m.anio +
-          ' — $' +
+          ' – $' +
           monto(m.suma_monto_total || 0)
         "
       >
-        <span class="spark__label">{{ m.mes | number : "2.0" }}</span>
+        <span class="spark__value">{{ abreviaMonto(m.suma_monto_total) }}</span>
+        <span class="spark__label">{{ m.mes | number : '2.0' }}</span>
       </div>
     </div>
 
