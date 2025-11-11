@@ -1,5 +1,6 @@
-<!-- Resumen del contribuyente -->
-<section class="summary" *ngIf="!loading && detalle">
+<div class="container container--narrow">
+  <!-- Resumen del contribuyente -->
+  <section class="summary" *ngIf="!loading && detalle">
   <div>
     <p class="summary__label">Contribuyente</p>
     <h1>{{ detalle.razon_social || "—" }}</h1>
@@ -28,10 +29,10 @@
       </span>
     </div>
   </div>
-</section>
+  </section>
 
 <!-- Detalle mensual (bloque principal, datos reales) -->
-<section class="card card--wide relative" aria-labelledby="detalle-title">
+  <section class="card card--wide relative" aria-labelledby="detalle-title">
   <h2 id="detalle-title">Detalle mensual</h2>
 
   <!-- Controles de periodo -->
@@ -238,9 +239,9 @@
       </ng-container>
     </div>
   </div>
-</section>
+  </section>
 
-<section class="card card--wide" aria-labelledby="serie-title">
+  <section class="card card--wide" aria-labelledby="serie-title">
   <h2 id="serie-title">Tendencia 6 meses</h2>
 
   <div class="loading-overlay" *ngIf="loadingSerie">
@@ -336,9 +337,9 @@
       </ng-container>
     </div>
   </div>
-</section>
+  </section>
 
-<details class="guia" aria-labelledby="guia-title">
+  <details class="guia" aria-labelledby="guia-title">
   <summary id="guia-title">¿Qué significa cada indicador?</summary>
   <div class="deflist">
     <div class="deflist__item">
@@ -382,5 +383,5 @@
       </div>
     </div>
   </div>
-</details>
-|
+  </details>
+</div>

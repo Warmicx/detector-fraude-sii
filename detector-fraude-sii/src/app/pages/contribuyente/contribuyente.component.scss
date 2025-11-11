@@ -3,6 +3,11 @@
   padding: 48px 0 64px;
 }
 
+/* Contenedor más estrecho para la página de detalle */
+.container.container--narrow {
+  max-width: 960px;
+}
+
 .summary {
   background: var(--color-surface);
   border-radius: 24px;
