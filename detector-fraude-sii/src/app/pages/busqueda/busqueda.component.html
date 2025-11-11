@@ -144,4 +144,41 @@
       ›
     </button>
   </nav>
+
+  <div class="card admin-tools" style="margin-top: 20px;">
+    <h3>Datos de prueba (admin)</h3>
+    <div class="row">
+      <input
+        type="text"
+        placeholder="RUT (solo dígitos)"
+        [(ngModel)]="adm.rut"
+      />
+      <select [(ngModel)]="adm.sospecha">
+        <option value="monto">monto</option>
+        <option value="cantidad">cantidad</option>
+      </select>
+      <input
+        type="number"
+        placeholder="Multiplicador"
+        [(ngModel)]="adm.mult"
+        min="2"
+        step="1"
+      />
+      <button
+        class="btn"
+        (click)="generarSospechoso()"
+        [disabled]="adm.loading"
+      >
+        Generar sospechoso
+      </button>
+      <button
+        class="btn btn--ghost"
+        (click)="recalcularAgregados()"
+        [disabled]="adm.loading"
+      >
+        Recalcular agregados
+      </button>
+    </div>
+    <p class="hint" *ngIf="adm.msg">{{ adm.msg }}</p>
+  </div>
 </section>

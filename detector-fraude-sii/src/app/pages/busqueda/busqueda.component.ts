@@ -184,4 +184,35 @@ export class BusquedaComponent implements OnInit {
   onLimpiar() {
     this.rutQuery = '';
   }
+
+  adm = { rut: '', sospecha: 'monto' as 'monto'|'cantidad', mult: 10, loading: false, msg: '' };
+
+private API_GEN = 'https://ythjq59t4l.execute-api.us-east-1.amazonaws.com/prod/generar_sospechoso';
+private API_AGR = 'https://4i1wbsosqc.execute-api.us-east-1.amazonaws.com/prod/agregados';
+
+generarSospechoso() {
+  const rut = (this.adm.rut || '').replace(/\D+/g, '');
+  if (!rut) { this.adm.msg = 'Ingresa un RUT válido (solo dígitos).'; return; }
+  if (!this.adm.mult || this.adm.mult < 2) { this.adm.msg = 'Multiplicador ≥ 2.'; return; }
+
+  this.adm.loading = true; this.adm.msg = 'Generando…';
+  const params = new HttpParams()
+    .set('rut', rut)
+    .set('sospecha', this.adm.sospecha)
+    .set('multiplicador', String(this.adm.mult));
+
+  this.http.get(this.API_GEN, { params }).subscribe({
+    next: () => { this.adm.msg = 'Listo: sospechoso generado. Ahora recalcula agregados.'; this.adm.loading = false; },
+    error: () => { this.adm.msg = 'Error al generar sospechoso.'; this.adm.loading = false; }
+  });
+}
+
+recalcularAgregados() {
+  this.adm.loading = true; this.adm.msg = 'Recalculando agregados…';
+  this.http.get(this.API_AGR).subscribe({
+    next: () => { this.adm.msg = 'Agregados recalculados. Refrescando vista…'; this.adm.loading = false; this.fetch(); },
+    error: () => { this.adm.msg = 'Error al recalcular agregados.'; this.adm.loading = false; }
+  });
+}
+
 }
