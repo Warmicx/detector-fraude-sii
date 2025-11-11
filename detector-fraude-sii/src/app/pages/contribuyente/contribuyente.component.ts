@@ -46,6 +46,26 @@ type DetalleResponse = { count: number; items: DetalleItem[] };
 // ===== Endpoint base del detalle =====
 const API_DETALLE =
   'https://yiszf5g611.execute-api.us-east-1.amazonaws.com/get';
+// ===== Nuevo endpoint de contribuyentes_detalle (max score/nivel) =====
+const API_CONTRIBS_DETALLE_BASE =
+  'https://55duhjg8v9.execute-api.us-east-1.amazonaws.com/prod';
+
+type ContribResumenItem = {
+  rut_emisor: number;
+  razon_social?: string;
+  actividad_economica?: string;
+  max_score?: number;
+  max_nivel_riesgo?: string; // bajo|medio|alto
+  anio_max_score?: number | null;
+  mes_max_score?: number | null;
+};
+type ContribResumenResponse = {
+  ok?: boolean;
+  count?: number;
+  page?: number;
+  limit?: number;
+  items: ContribResumenItem[];
+};
 
 @Component({
   selector: 'app-contribuyente',
@@ -71,6 +91,11 @@ export class ContribuyenteComponent implements OnInit {
   // === Resultados API ===
   detalle: DetalleItem | null = null;
   productos: string[] = [];
+  // Resumen máx de riesgo/score
+  maxScore: number | null = null;
+  maxNivel: string | null = null;
+  maxScoreYear: number | null = null;
+  maxScoreMonth: number | null = null;
 
   ngOnInit(): void {
     // 1) Tomamos el rut desde la URL si existe (viene desde /contribuyente/:rut)
@@ -92,6 +117,10 @@ export class ContribuyenteComponent implements OnInit {
     this.errorMsg = null;
     this.detalle = null;
     this.productos = [];
+    this.maxScore = null;
+    this.maxNivel = null;
+    this.maxScoreYear = null;
+    this.maxScoreMonth = null;
 
     let params = new HttpParams()
       .set('rut', this.rutParam)
@@ -106,6 +135,8 @@ export class ContribuyenteComponent implements OnInit {
         this.productos = item?.productos_unicos ?? [];
         this.loading = false;
         this.fetchSerie6m();
+        // En paralelo, traemos el resumen de max score/nivel
+        this.fetchMaxResumen();
       },
       error: (err) => {
         console.error('Error detalle contribuyente', err);
@@ -113,6 +144,36 @@ export class ContribuyenteComponent implements OnInit {
         this.loading = false;
       },
     });
+  }
+
+  private fetchMaxResumen() {
+    if (!this.rutParam) return;
+    const params = new HttpParams().set('rut', this.rutParam).set('limit', '1');
+    this.http
+      .get<ContribResumenResponse>(`${API_CONTRIBS_DETALLE_BASE}/contribuyentes_detalle`, { params })
+      .subscribe({
+        next: (res) => {
+          const it = res.items?.[0];
+          if (it) {
+            this.maxScore = it.max_score ?? null;
+            this.maxNivel = (it.max_nivel_riesgo || '')
+              .toString()
+              .toUpperCase() || null;
+            this.maxScoreYear = it.anio_max_score ?? null;
+            this.maxScoreMonth = it.mes_max_score ?? null;
+            // Si faltan datos descriptivos en el detalle mensual, intenta completarlos
+            if (this.detalle) {
+              if (!this.detalle.razon_social && it.razon_social)
+                this.detalle.razon_social = it.razon_social;
+              if (!this.detalle.actividad_economica && it.actividad_economica)
+                this.detalle.actividad_economica = it.actividad_economica;
+            }
+          }
+        },
+        error: (err) => {
+          console.warn('No se pudo obtener max score/nivel', err);
+        },
+      });
   }
 
   cambiarPeriodo(deltaMes: number) {

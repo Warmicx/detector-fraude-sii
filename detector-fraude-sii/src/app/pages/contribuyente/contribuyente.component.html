@@ -12,11 +12,21 @@
     </p>
   </div>
   <div class="summary__score" aria-live="polite">
-    <div class="summary__score-value">{{ detalle.score ?? "—" }}</div>
-    <span [class]="riesgoBadgeClass(detalle.nivel_riesgo)">{{
-      detalle.nivel_riesgo || "SIN NIVEL"
+    <!-- Score del mes actual -->
+    <div class="summary__score-value">{{ detalle?.score ?? "-" }}</div>
+    <span [class]="riesgoBadgeClass(detalle?.nivel_riesgo)">{{
+      detalle?.nivel_riesgo || "SIN NIVEL"
     }}</span>
-    <div class="summary__score-label">Score de riesgo</div>
+    <div class="summary__score-label">Score de riesgo (mes)</div>
+
+    <!-- Máximo histórico -->
+    <div class="summary__meta" *ngIf="maxScore != null">
+      Máx. histórico: {{ maxScore }}
+      <span *ngIf="maxNivel">- {{ maxNivel }}</span>
+      <span *ngIf="maxScoreMonth && maxScoreYear">
+        ({{ maxScoreMonth | number: '2.0' }}/{{ maxScoreYear }})
+      </span>
+    </div>
   </div>
 </section>
 

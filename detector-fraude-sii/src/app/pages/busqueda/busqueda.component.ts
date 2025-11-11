@@ -18,21 +18,27 @@ type Contribuyente = {
 
 // === Tipos de API ===
 type ApiItem = {
-  RUT_Emisor: number;
-  Actividad_Economica: string;
-  Fecha_Registro: string;
-  Razon_Social: string;
+  rut_emisor: number;
+  razon_social: string;
+  actividad_economica: string;
+  max_score?: number;
+  max_nivel_riesgo?: string; // "bajo" | "medio" | "alto"
+  anio_max_riesgo_alto?: number | null;
+  mes_max_riesgo_alto?: number | null;
+  anio_max_score?: number | null;
+  mes_max_score?: number | null;
 };
 
 type ApiResponse = {
+  ok?: boolean;
+  count?: number;
+  page?: number;
+  limit?: number;
   items: ApiItem[];
-  pagination?: { page: number; limit: number; total: number; pages: number };
-  sort?: { by: string; order: 'asc' | 'desc' };
-  filters?: Record<string, unknown>;
 };
 
 // Base directa (tu proyecto no usa environments)
-const API_BASE = 'https://hl1gdqsvoj.execute-api.us-east-1.amazonaws.com/prod';
+const API_BASE = 'https://55duhjg8v9.execute-api.us-east-1.amazonaws.com/prod';
 
 @Component({
   selector: 'app-busqueda',
@@ -82,25 +88,27 @@ export class BusquedaComponent implements OnInit {
       .set('limit', this.limit);
 
     this.http
-      .get<ApiResponse>(`${API_BASE}/contribuyentes`, { params })
+      .get<ApiResponse>(`${API_BASE}/contribuyentes_detalle`, { params })
       .subscribe({
         next: (res) => {
-          // Mapear a tu modelo UI actual
+          // Mapear a tu modelo UI actual, usando el nuevo servicio con score
           this.contribuyentes = (res.items ?? []).map(
             (it): Contribuyente => ({
-              rut: String(it.RUT_Emisor), // sin DV (el backend no lo entrega)
-              razonSocial: it.Razon_Social,
-              giro: it.Actividad_Economica,
-              score: 0, // placeholder (no viene en API)
-              nivel: 'BAJO', // placeholder (no viene en API)
-              comuna: '-', // placeholder (no viene en API)
-              fechaRegistro: it.Fecha_Registro,
+              rut: String(it.rut_emisor),
+              razonSocial: it.razon_social,
+              giro: it.actividad_economica,
+              score: it.max_score ?? 0,
+              nivel: ((it.max_nivel_riesgo || '') as string).toString().toUpperCase() as any,
+              comuna: '-',
+              fechaRegistro: undefined,
             })
           );
 
           // Meta de paginación
-          this.total = res.pagination?.total ?? this.contribuyentes.length;
-          this.pages = res.pagination?.pages ?? 1;
+          const count = res.count ?? this.contribuyentes.length;
+          const limit = res.limit ?? this.limit;
+          this.total = count;
+          this.pages = count && limit ? Math.max(1, Math.ceil(count / limit)) : 1;
           this.loading = false;
         },
         error: (err) => {
@@ -171,14 +179,38 @@ export class BusquedaComponent implements OnInit {
       // feedback sutil: podrías setear un flag si quieres mostrar error de formato
       return;
     }
-    const results = this.listaVisible();
-    if (results.length === 1) {
-      // Navega directo al detalle si hay 1 match
-      const only = results[0];
-      this.router.navigate(['/contribuyente', this.formatRut(only.rut)]);
-    } else {
-      // Si hay 0 o varios, se muestran en la tabla filtrada (ya ocurre por listaVisible)
-    }
+    // Búsqueda remota por RUT para no depender de la página actual
+    const rut = this.normalizeRut(this.rutQuery);
+    this.loading = true;
+    const params = new HttpParams().set('rut', rut).set('limit', 10);
+    this.http
+      .get<ApiResponse>(`${API_BASE}/contribuyentes_detalle`, { params })
+      .subscribe({
+        next: (res) => {
+          const mapped = (res.items ?? []).map(
+            (it): Contribuyente => ({
+              rut: String(it.rut_emisor),
+              razonSocial: it.razon_social,
+              giro: it.actividad_economica,
+              score: it.max_score ?? 0,
+              nivel: ((it.max_nivel_riesgo || '') as string).toString().toUpperCase() as any,
+              comuna: '-',
+              fechaRegistro: undefined,
+            })
+          );
+          if (mapped.length === 1) {
+            this.router.navigate(['/contribuyente', this.formatRut(mapped[0].rut)]);
+          } else {
+            this.contribuyentes = mapped;
+            this.total = mapped.length;
+            this.pages = 1;
+          }
+          this.loading = false;
+        },
+        error: () => {
+          this.loading = false;
+        },
+      });
   }
 
   onLimpiar() {
