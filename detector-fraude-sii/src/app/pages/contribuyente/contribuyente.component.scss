@@ -439,7 +439,7 @@
   background: linear-gradient(180deg, #ffffff, #f8fbff);
   border: 1px solid rgba(20, 35, 70, .08);
   box-shadow: 0 6px 16px rgba(12,31,55,.06);
-  position: relative; overflow: hidden;
+  position: relative;
 }
 .kpi::after{
   content: '';
@@ -497,7 +497,7 @@
   border: 1px solid rgba(120,140,200,.25);
   box-shadow: 0 10px 24px rgba(6,12,30,.4);
   opacity:0; pointer-events:none; transition: opacity .12s ease;
-  z-index: 20;
+  z-index: 90;
 }
 .tooltip:hover .tooltip__bubble { opacity: 1; }
 .tooltip__bubble b { color:#9cc1ff; }
