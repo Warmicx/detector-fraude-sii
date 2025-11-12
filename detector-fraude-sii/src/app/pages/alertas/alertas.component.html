@@ -1,36 +1,62 @@
 <section class="container alertas">
   <header class="section-header">
     <h1>Alertas de riesgo</h1>
-    <p>Explora las alertas generadas automáticamente y prioriza su revisión.</p>
+    <p>Explora las alertas generadas y prioriza su revision.</p>
   </header>
 
   <div class="filters">
-    <div class="chip-group" aria-label="Estados">
-      <span class="chip chip--active" *ngFor="let estado of estados">{{ estado }}</span>
-    </div>
     <div class="chip-group" aria-label="Severidad">
-      <span class="chip" *ngFor="let severidad of severidades" [class.chip--alta]="severidad === 'ALTA'" [class.chip--media]="severidad === 'MEDIA'" [class.chip--baja]="severidad === 'BAJA'">
+      <button
+        type="button"
+        class="chip"
+        *ngFor="let severidad of severidades"
+        [class.chip--alta]="severidad === 'ALTA'"
+        [class.chip--media]="severidad === 'MEDIA'"
+        [class.chip--baja]="severidad === 'BAJA'"
+        [class.chip--active]="filtroSeveridad.has(severidad)"
+        (click)="toggleSeveridad(severidad)"
+      >
         {{ severidad }}
-      </span>
+      </button>
+      <button type="button" class="chip" (click)="filtroSeveridad.clear()">Todas</button>
     </div>
   </div>
 
   <section class="panel" aria-label="Listado de alertas">
-    <article class="alert" *ngFor="let alerta of alertas" [class.alert--alta]="alerta.severidad === 'ALTA'" [class.alert--media]="alerta.severidad === 'MEDIA'" [class.alert--baja]="alerta.severidad === 'BAJA'">
+    <div class="loading-overlay" *ngIf="loading">
+      <div class="spinner" role="status" aria-label="Cargando"></div>
+    </div>
+
+    <p *ngIf="!loading && error" class="error">{{ error }}</p>
+
+    <article
+      class="alert"
+      *ngFor="let alerta of visibles()"
+      [class.alert--alta]="alerta.severidad === 'ALTA'"
+      [class.alert--media]="alerta.severidad === 'MEDIA'"
+      [class.alert--baja]="alerta.severidad === 'BAJA'"
+    >
       <header>
         <h2>{{ alerta.id }}</h2>
         <span class="badge">{{ alerta.severidad }}</span>
       </header>
-      <p class="alert__meta">{{ alerta.rut }} · {{ alerta.razonSocial }}</p>
-      <p class="alert__rule">Regla: {{ alerta.regla }}</p>
+      <p class="alert__meta">
+        {{ alerta.rut }} - {{ alerta.razonSocial }}
+        <a
+          [routerLink]="['/contribuyente', alerta.rutParam]"
+          class="ver-link"
+        >Ver contribuyente</a>
+      </p>
+      <p class="alert__rule">Regla: {{ alerta.regla }}<span *ngIf="alerta.score != null"> - Score max: {{ alerta.score }}</span></p>
       <p class="alert__date">{{ alerta.fecha }}</p>
     </article>
   </section>
 
-  <nav class="pagination" aria-label="Paginación">
-    <button type="button" class="page-btn" disabled aria-label="Anterior">‹</button>
-    <button type="button" class="page-btn active" disabled>1</button>
-    <button type="button" class="page-btn" disabled>2</button>
-    <button type="button" class="page-btn" disabled aria-label="Siguiente">›</button>
+  <nav class="pagination" aria-label="Paginacion">
+    <button type="button" class="page-btn" (click)="prevPage()" [disabled]="loading || page === 1" aria-label="Anterior">&#171;</button>
+    <span class="page-info">Pagina {{ page }} de {{ pages }} - Total {{ total }}</span>
+    <button type="button" class="page-btn" (click)="nextPage()" [disabled]="loading || page === pages || pages === 0" aria-label="Siguiente">&#187;</button>
   </nav>
 </section>
+
+

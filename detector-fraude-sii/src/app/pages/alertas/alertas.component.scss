@@ -59,6 +59,7 @@
 .panel {
   display: grid;
   gap: 16px;
+  position: relative;
 }
 
 .alert {
@@ -157,3 +158,25 @@
     padding: 18px;
   }
 }
+
+/* Loading overlay and spinner (ligero) */
+.loading-overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(255,255,255,.6);
+  z-index: 1;
+}
+.spinner {
+  width: 34px; height: 34px;
+  border: 3px solid #d1d5db;
+  border-top-color: #0c5bbf;
+  border-radius: 50%;
+  animation: spin .8s linear infinite;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.ver-link { margin-left: .5rem; color: var(--color-secondary); font-weight: 600; text-decoration: none; }
+.ver-link:hover, .ver-link:focus { text-decoration: underline; outline: none; }
